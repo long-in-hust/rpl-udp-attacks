@@ -52,14 +52,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
   static uint32_t missed_tx_count;
 
   // 0:0:0:0:204:4:4:4
-  dest_ipaddr.u16[0] = 0x00fd;
-  dest_ipaddr.u16[1] = 0x0;
-  dest_ipaddr.u16[2] = 0x0;
-  dest_ipaddr.u16[3] = 0x0;
-  dest_ipaddr.u16[4] = 0x0402; // little endian
-  dest_ipaddr.u16[5] = 0x0400;
-  dest_ipaddr.u16[6] = 0x0400;
-  dest_ipaddr.u16[7] = 0x0400;
+  uip_ip6addr(&dest_ipaddr, 0xfd00, 0, 0, 0, 0x204, 0x4, 0x4, 0x4);
 
 
   PROCESS_BEGIN();
