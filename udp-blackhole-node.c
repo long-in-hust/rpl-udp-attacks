@@ -16,7 +16,7 @@
 #define WITH_SERVER_REPLY  1
 
 /*---------------------------------------------------------------------------*/
-PROCESS(dag_version_process, "RPL DIS flooder");
+PROCESS(dag_version_process, "RPL UDP Blackhole");
 AUTOSTART_PROCESSES(&dag_version_process);
 
 /*---------------------------------------------------------------------------*/
@@ -24,25 +24,29 @@ static enum netstack_ip_action
 ip_input(void)
 {
   uint8_t proto = 0;
+  uip_ip6addr_t check_src_addr;
+  // uip_ip6addr(&check_src_addr, 0xfd00, 0, 0, 0, 0x203, 0x3, 0x3, 0x3);
+
   uipbuf_get_last_header(uip_buf, uip_len, &proto);
-  if (proto != UIP_PROTO_ICMP6) {
-    LOG_INFO_("Packet accepted !\n");
+  LOG_INFO("Incoming packet proto: %d, from ", proto);
+  LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
+  LOG_INFO_("\n");
+  if (proto != UIP_PROTO_UDP && proto != UIP_PROTO_HBHO) {
     return NETSTACK_IP_PROCESS;
   }
-
-  uint8_t icmp6_type = uip_buf[UIP_IPH_LEN];
-  uint8_t icmp6_code = uip_buf[UIP_IPH_LEN + 1];
-  LOG_INFO("Incoming packet proto: %d - icmp6 type: %d - icmp6 rpl code: %d from ", 
-      proto, icmp6_type, icmp6_code);
+  if (proto == UIP_PROTO_HBHO && uip_buf[40] != UIP_PROTO_UDP) {
+    return NETSTACK_IP_PROCESS;
+  }
+  LOG_INFO("UDP packet from ");
   LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
   LOG_INFO_("\n");
   
-  if (icmp6_type == ICMP6_RPL && icmp6_code == RPL_CODE_DIO) {
-    LOG_INFO("Dropped DIO packet !\n");
-    return NETSTACK_IP_DROP;
-  }
-  LOG_INFO_("Packet accepted !\n");
-  return NETSTACK_IP_PROCESS;
+  // if (uip_ip6addr_cmp(&UIP_IP_BUF->srcipaddr, &check_src_addr)) {
+  LOG_INFO("Dropping packet !\n");
+  return NETSTACK_IP_DROP;
+  // }
+
+  // return NETSTACK_IP_PROCESS;
 }
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action
@@ -60,18 +64,12 @@ struct netstack_ip_packet_processor packet_processor = {
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(dag_version_process, ev, data)
 {
-  static struct etimer periodic_timer;
-
   PROCESS_BEGIN();
 
   netstack_ip_packet_processor_add(&packet_processor);
 
   while (1) {
-    etimer_set(&periodic_timer, 0.01 * CLOCK_SECOND);
-    rpl_icmp6_dis_output(NULL);
-    // LOG_INFO("Sent DIS\n");
-    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-    etimer_reset(&periodic_timer);
+    PROCESS_YIELD();
   }
 
   PROCESS_END();
