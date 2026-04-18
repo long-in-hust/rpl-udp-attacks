@@ -4,7 +4,7 @@
 #include "net/netstack.h"
 #include <stdint.h>
 #include <inttypes.h>
-#include "net/routing/rpl-lite/rpl.h"
+#include "attacking-rpl/attacking-rpl.h"
 #include "net/packetbuf.h"
 #include "net/ipv6/uipbuf.h"
 #include "net/ipv6/uip-icmp6.h"
@@ -48,6 +48,7 @@ PROCESS_THREAD(decr_rank_attacker, ev, data)
   netstack_ip_packet_processor_add(&packet_processor);
 
   while (1) {
+    curr_instance.dag.rank = 192;
     etimer_set(&periodic_timer, 0.01 * CLOCK_SECOND);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
