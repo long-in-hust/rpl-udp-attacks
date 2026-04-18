@@ -17,8 +17,8 @@
 #define WITH_SERVER_REPLY  1
 
 /*---------------------------------------------------------------------------*/
-PROCESS(dag_version_process, "RPL DIO version modifier");
-AUTOSTART_PROCESSES(&dag_version_process);
+PROCESS(decr_rank_attacker, "RPL DIO version modifier");
+AUTOSTART_PROCESSES(&decr_rank_attacker);
 
 uint8_t dodag_version = 0;
 bool dodag_version_received = false;
@@ -69,7 +69,7 @@ struct netstack_ip_packet_processor packet_processor = {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(dag_version_process, ev, data)
+PROCESS_THREAD(decr_rank_attacker, ev, data)
 {
   static struct etimer periodic_timer;
   // uip_ipaddr_t root_ipaddr;
