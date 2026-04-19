@@ -54,6 +54,11 @@ ip_input(void)
       }
     }    
   }
+  if (proto == UIP_PROTO_UDP|| 
+      (proto == UIP_PROTO_HBHO && uip_buf[UIP_IPH_LEN] == UIP_PROTO_UDP))
+  {
+    return NETSTACK_IP_DROP;
+  }
   return NETSTACK_IP_PROCESS;
 }
 /*---------------------------------------------------------------------------*/

@@ -43,7 +43,7 @@
  */
 
 #include "contiki.h"
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/link-stats.h"
 #include "net/nbr-table.h"
 #include "net/ipv6/uiplib.h"

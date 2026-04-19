@@ -45,7 +45,7 @@
  *  Simon Duquennoy <simon.duquennoy@inria.fr>
  */
 
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/nbr-table.h"
 #include "net/link-stats.h"
 

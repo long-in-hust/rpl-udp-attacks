@@ -41,7 +41,7 @@
  */
 
 #include "contiki.h"
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/ipv6/uip-sr.h"
 #include "net/link-stats.h"
 #include "lib/random.h"

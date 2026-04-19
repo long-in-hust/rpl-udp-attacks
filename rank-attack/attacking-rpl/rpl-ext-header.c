@@ -44,7 +44,7 @@
  */
 
 #include "net/routing/routing.h"
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/ipv6/uip-sr.h"
 #include "net/packetbuf.h"
 

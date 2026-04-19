@@ -48,9 +48,9 @@
 /********** Includes **********/
 
 #include "net/ipv6/uip.h"
-#include "net/routing/rpl-lite/rpl-const.h"
-#include "net/routing/rpl-lite/rpl-conf.h"
-#include "net/routing/rpl-lite/rpl-types.h"
+#include "rpl-const.h"
+#include "rpl-conf.h"
+#include "rpl-types.h"
 
 /********** Public symbols **********/
 
@@ -61,12 +61,12 @@ extern uip_ipaddr_t rpl_multicast_addr;
 
 /********** More Includes **********/
 
-#include "net/routing/rpl-lite/rpl-icmp6.h"
-#include "net/routing/rpl-lite/rpl-dag.h"
-#include "net/routing/rpl-lite/rpl-dag-root.h"
-#include "net/routing/rpl-lite/rpl-neighbor.h"
-#include "net/routing/rpl-lite/rpl-ext-header.h"
-#include "net/routing/rpl-lite/rpl-timers.h"
+#include "rpl-icmp6.h"
+#include "rpl-dag.h"
+#include "rpl-dag-root.h"
+#include "rpl-neighbor.h"
+#include "rpl-ext-header.h"
+#include "rpl-timers.h"
 
 /********** Public functions **********/
 

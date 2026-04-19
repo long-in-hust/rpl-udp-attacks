@@ -31,6 +31,7 @@
 #include "net/routing/routing.h"
 #include "net/netstack.h"
 #include "net/ipv6/simple-udp.h"
+#include "net/routing/rpl-lite/rpl.h"
 
 #include "sys/log.h"
 #define LOG_MODULE "App"
@@ -66,6 +67,9 @@ udp_rx_callback(struct simple_udp_connection *c,
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(udp_server_process, ev, data)
 {
+  static uip_ipaddr_t root_ipaddr;
+  static struct etimer periodic_timer;
+  
   PROCESS_BEGIN();
   
   /* Initialize UDP connection */
@@ -73,6 +77,15 @@ PROCESS_THREAD(udp_server_process, ev, data)
   LOG_INFO_("\n");
   simple_udp_register(&udp_conn, UDP_SERVER_PORT, NULL,
                       UDP_CLIENT_PORT, udp_rx_callback);
+
+  while (1) {
+    if (NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)) {
+      LOG_INFO("Current node rank: %u\n", curr_instance.dag.rank);
+    }
+    etimer_set(&periodic_timer, 5 * CLOCK_SECOND);
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+    etimer_reset(&periodic_timer);
+  }
 
   PROCESS_END();
 }

@@ -4,7 +4,7 @@
 #include "net/netstack.h"
 #include <stdint.h>
 #include <inttypes.h>
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/packetbuf.h"
 #include "net/ipv6/uipbuf.h"
 #include "net/ipv6/uip-icmp6.h"

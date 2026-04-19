@@ -4,7 +4,7 @@
 #include "net/netstack.h"
 #include <stdint.h>
 #include <inttypes.h>
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/packetbuf.h"
 #include "net/ipv6/uipbuf.h"
 #include "net/ipv6/uip-icmp6.h"
@@ -16,7 +16,7 @@
 #define WITH_SERVER_REPLY  1
 
 /*---------------------------------------------------------------------------*/
-PROCESS(decr_rank_attacker, "RPL DAO Blackhole");
+PROCESS(decr_rank_attacker, "RPL UDP Blackhole");
 AUTOSTART_PROCESSES(&decr_rank_attacker);
 
 /*---------------------------------------------------------------------------*/
@@ -24,25 +24,26 @@ static enum netstack_ip_action
 ip_input(void)
 {
   uint8_t proto = 0;
+  // uip_ip6addr_t check_src_addr[3];
+  // uip_ip6addr(&check_src_addr[0], 0xfd00, 0, 0, 0, 0x203, 0x3, 0x3, 0x3);
+  // uip_ip6addr(&check_src_addr[1], 0xfd00, 0, 0, 0, 0x202, 0x2, 0x2, 0x2);
+  // uip_ip6addr(&check_src_addr[2], 0xfd00, 0, 0, 0, 0x207, 0x7, 0x7, 0x7);
+
   uipbuf_get_last_header(uip_buf, uip_len, &proto);
   LOG_INFO("Incoming packet proto: %d, from ", proto);
   LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
   LOG_INFO_("\n");
-  if (proto != UIP_PROTO_ICMP6 && proto != UIP_PROTO_HBHO) {
-    return NETSTACK_IP_PROCESS;
-  }
-  if (proto == UIP_PROTO_HBHO && uip_buf[40] != UIP_PROTO_ICMP6) {
-    return NETSTACK_IP_PROCESS;
-  }
-  LOG_INFO("ICMP6 type: %d - ICMP6 RPL code: %d from ", 
-      uip_buf[48], uip_buf[49]);
-  LOG_INFO_("\n");
-  
-  if (uip_buf[48] == ICMP6_RPL && uip_buf[49] == RPL_CODE_DAO) {
-    LOG_INFO("Dropping DAO packet !\n");
-    return NETSTACK_IP_DROP;
-  }
-  return NETSTACK_IP_PROCESS;
+
+  // uip_ipaddr_prefixcmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[0], 128)
+  // if (uip_ip6addr_cmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[0]) ||
+  //      uip_ip6addr_cmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[1]) || 
+  //      uip_ip6addr_cmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[2])) 
+  // {
+  //   LOG_INFO("Dropping packet !\n");
+  //   return NETSTACK_IP_DROP;
+  // }
+  LOG_INFO("Dropping packet !\n");
+  return NETSTACK_IP_DROP;
 }
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action

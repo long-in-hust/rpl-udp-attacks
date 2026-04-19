@@ -42,7 +42,7 @@
  * Contributors: George Oikonomou <oikonomou@users.sourceforge.net> (multicast)
  */
 
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/ipv6/uip-sr.h"
 #include "net/nbr-table.h"
 #include "net/link-stats.h"
@@ -291,7 +291,8 @@ rpl_dag_update_state(void)
     /* Select and set preferred parent */
     rpl_neighbor_set_preferred_parent(rpl_neighbor_select_best());
     /* Update rank  */
-    curr_instance.dag.rank = rpl_neighbor_rank_via_nbr(curr_instance.dag.preferred_parent);
+    // curr_instance.dag.rank = rpl_neighbor_rank_via_nbr(curr_instance.dag.preferred_parent);
+    // curr_instance.dag.rank = 256;
 
     /* Update better_parent_since flag for each neighbor */
     nbr = nbr_table_head(rpl_neighbors);
