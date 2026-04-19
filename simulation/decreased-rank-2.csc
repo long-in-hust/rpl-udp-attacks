@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simconf version="2023090101">
   <simulation>
-    <title>rpl-non-root-udp</title>
+    <title>rpl-decreased-rank-with-blackhole</title>
     <speedlimit>20.0</speedlimit>
     <randomseed>321458</randomseed>
     <motedelay_us>1000000</motedelay_us>
@@ -18,7 +18,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Root Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/udp-root.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/udp-root.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-root.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -54,7 +54,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Client Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/udp-client.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/udp-client.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -140,7 +140,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Server Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/udp-server.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/udp-server.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -161,7 +161,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-34.00935087584719" y="142.64857917413613" />
+          <pos x="-38.39741762766717" y="112.44835505866928" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -172,7 +172,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DIS flooder</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/dis-flooder.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/dis-flooder.c</source>
       <commands>$(MAKE) -j$(CPUS) dis-flooder.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -194,7 +194,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DODAG Version Messing mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/dag-version-dio.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/dag-version-dio.c</source>
       <commands>$(MAKE) -j$(CPUS) dag-version-dio.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -216,7 +216,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Decreased Rank Attacker</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/rank-attack/decreased-rank-attacker.c</source>
+      <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker.c</source>
       <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -237,9 +237,9 @@
     </motetype>
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
-      <description>Blackhole Attacker with Rank</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/rank-attack/decreased-rank-blackhole.c</source>
-      <commands>$(MAKE) -j$(CPUS) decreased-rank-blackhole.cooja TARGET=cooja</commands>
+      <description>Rank Decreasing attacker</description>
+      <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker.c</source>
+      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
       <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>
@@ -263,7 +263,7 @@
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-          <id>10</id>
+          <id>8</id>
         </interface_config>
       </mote>
     </motetype>
@@ -276,7 +276,7 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>3.874143435249513 0.0 0.0 3.874143435249513 506.1391209638004 66.31590753014767</viewport>
+      <viewport>3.874143435249513 0.0 0.0 3.874143435249513 507.1391209638004 31.315907530147673</viewport>
     </plugin_config>
     <bounds x="1" y="1" height="800" width="873" />
   </plugin>

@@ -18,7 +18,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Root Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/udp-root.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-root.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-root.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -54,7 +54,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Client Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/udp-client.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-client.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -143,14 +143,14 @@
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-          <id>10</id>
+          <id>8</id>
         </interface_config>
       </mote>
     </motetype>
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Server Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/udp-server.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-server.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
