@@ -18,7 +18,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Root Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-root.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/udp-root.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-root.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -54,7 +54,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Client Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-client.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/udp-client.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -75,7 +75,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-21.35843557366372" y="84.69598492398836" />
+          <pos x="-5.145283169142218" y="80.44968310375654" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -85,7 +85,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="30.189553305180553" y="94.44400529409772" />
+          <pos x="31.347635619789234" y="70.89633156372125" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -119,7 +119,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="40.38104589943913" y="41.32595660439247" />
+          <pos x="34.20460688819284" y="27.042941390885435" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -130,7 +130,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Server Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-server.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/udp-server.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -151,7 +151,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="75.25916820043251" y="50.58700383019145" />
+          <pos x="67.53861943637465" y="52.90316845940882" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -162,7 +162,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DAO blackhole</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/dao-blackhole-node.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/dao-blackhole-node.c</source>
       <commands>$(MAKE) -j$(CPUS) dao-blackhole-node.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -184,7 +184,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>General Blackhole</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/general-blackhole-node.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/general-blackhole-node.c</source>
       <commands>$(MAKE) -j$(CPUS) general-blackhole-node.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -205,7 +205,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="5.842884079696597" y="60.526590719742444" />
+          <pos x="6.614938956102382" y="51.64795964107591" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -222,7 +222,7 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>2.590489434262463 0.0 0.0 2.590489434262463 405.03332566508755 225.52328514869095</viewport>
+      <viewport>2.590489434262463 0.0 0.0 2.590489434262463 388.0333256650876 165.52328514869095</viewport>
     </plugin_config>
     <bounds x="1" y="1" height="800" width="873" />
   </plugin>
