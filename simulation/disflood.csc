@@ -162,7 +162,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DIS flooder</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attackdis-flooder.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/dis-flooder.c</source>
       <commands>$(MAKE) -j$(CPUS) dis-flooder.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>

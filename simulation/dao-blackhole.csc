@@ -162,7 +162,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DAO blackhole</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attackdao-blackhole-node.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/dao-blackhole-node.c</source>
       <commands>$(MAKE) -j$(CPUS) dao-blackhole-node.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
