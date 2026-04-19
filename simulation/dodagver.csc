@@ -18,7 +18,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Root Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-custom/udp-root.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-root.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-root.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -54,7 +54,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Client Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-custom/udp-client.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-client.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -130,7 +130,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Server Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-custom/udp-server.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/udp-server.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -162,7 +162,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DIS flooder</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-custom/dis-flooder.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attackdis-flooder.c</source>
       <commands>$(MAKE) -j$(CPUS) dis-flooder.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -184,7 +184,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DODAG Version Messing mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-custom/dag-version-dio.c</source>
+      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attackdag-version-dio.c</source>
       <commands>$(MAKE) -j$(CPUS) dag-version-dio.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
