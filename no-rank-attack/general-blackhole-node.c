@@ -29,7 +29,8 @@ ip_input(void)
   LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
   LOG_INFO_("\n");
 
-  if ((proto == UIP_PROTO_ICMP6 && uip_buf[40] == ICMP6_RPL) || (proto == UIP_PROTO_HBHO && uip_buf[48] == ICMP6_RPL)) {
+  if ((proto == UIP_PROTO_ICMP6 && uip_buf[40] == ICMP6_RPL) || 
+      (proto == UIP_PROTO_HBHO && uip_buf[40] == UIP_PROTO_ICMP6 && uip_buf[48] == ICMP6_RPL)) {
     LOG_INFO("Letting RPL packet pass !\n");
     return NETSTACK_IP_PROCESS;
   }
