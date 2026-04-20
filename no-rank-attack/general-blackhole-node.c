@@ -24,24 +24,15 @@ static enum netstack_ip_action
 ip_input(void)
 {
   uint8_t proto = 0;
-  // uip_ip6addr_t check_src_addr[3];
-  // uip_ip6addr(&check_src_addr[0], 0xfd00, 0, 0, 0, 0x203, 0x3, 0x3, 0x3);
-  // uip_ip6addr(&check_src_addr[1], 0xfd00, 0, 0, 0, 0x202, 0x2, 0x2, 0x2);
-  // uip_ip6addr(&check_src_addr[2], 0xfd00, 0, 0, 0, 0x207, 0x7, 0x7, 0x7);
-
   uipbuf_get_last_header(uip_buf, uip_len, &proto);
   LOG_INFO("Incoming packet proto: %d, from ", proto);
   LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
   LOG_INFO_("\n");
 
-  // uip_ipaddr_prefixcmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[0], 128)
-  // if (uip_ip6addr_cmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[0]) ||
-  //      uip_ip6addr_cmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[1]) || 
-  //      uip_ip6addr_cmp(&UIP_IP_BUF->srcipaddr, &check_src_addr[2])) 
-  // {
-  //   LOG_INFO("Dropping packet !\n");
-  //   return NETSTACK_IP_DROP;
-  // }
+  if ((proto == UIP_PROTO_ICMP6 && uip_buf[40] == ICMP6_RPL) || (proto == UIP_PROTO_HBHO && uip_buf[48] == ICMP6_RPL)) {
+    LOG_INFO("Letting RPL packet pass !\n");
+    return NETSTACK_IP_PROCESS;
+  }
   LOG_INFO("Dropping packet !\n");
   return NETSTACK_IP_DROP;
 }
