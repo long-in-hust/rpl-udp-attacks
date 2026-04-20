@@ -28,6 +28,13 @@ ip_input(void)
   LOG_INFO("Incoming packet proto: %d, from ", proto);
   LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
   LOG_INFO_("\n");
+
+  if ((proto == UIP_PROTO_ICMP6 && uip_buf[40] == ICMP6_RPL) || 
+      (proto == UIP_PROTO_HBHO && uip_buf[40] == UIP_PROTO_ICMP6 && uip_buf[48] == ICMP6_RPL)) {
+    LOG_INFO("Letting RPL packet pass !\n");
+    return NETSTACK_IP_PROCESS;
+  }
+  LOG_INFO("Dropping packet !\n");
   return NETSTACK_IP_DROP;
 }
 /*---------------------------------------------------------------------------*/
