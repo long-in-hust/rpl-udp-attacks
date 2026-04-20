@@ -17,13 +17,13 @@
 #define WITH_SERVER_REPLY  1
 
 /*---------------------------------------------------------------------------*/
-PROCESS(decr_rank_attacker, "RPL DIO version modifier");
-AUTOSTART_PROCESSES(&decr_rank_attacker);
+PROCESS(blackhole_attacker, "RPL DIO version modifier");
+AUTOSTART_PROCESSES(&blackhole_attacker);
 
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(decr_rank_attacker, ev, data)
+PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   static struct etimer periodic_timer;
   // uip_ipaddr_t root_ipaddr;

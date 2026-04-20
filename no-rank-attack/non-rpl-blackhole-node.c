@@ -16,26 +16,44 @@
 #define WITH_SERVER_REPLY  1
 
 /*---------------------------------------------------------------------------*/
-PROCESS(decr_rank_attacker, "RPL UDP Blackhole");
-AUTOSTART_PROCESSES(&decr_rank_attacker);
+PROCESS(blackhole_attacker, "RPL UDP Blackhole");
+AUTOSTART_PROCESSES(&blackhole_attacker);
 
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action
 ip_input(void)
 {
+  uip_ipaddr_t root_ipaddr;
   uint8_t proto = 0;
+  uint8_t icmp6_type = 0;
   uipbuf_get_last_header(uip_buf, uip_len, &proto);
-  LOG_INFO("Incoming packet proto: %d, from ", proto);
-  LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
-  LOG_INFO_("\n");
-
-  if ((proto == UIP_PROTO_ICMP6 && uip_buf[40] == ICMP6_RPL) || 
-      (proto == UIP_PROTO_HBHO && uip_buf[40] == UIP_PROTO_ICMP6 && uip_buf[48] == ICMP6_RPL)) {
-    LOG_INFO("Letting RPL packet pass !\n");
-    return NETSTACK_IP_PROCESS;
+  if (proto == UIP_PROTO_ICMP6) {
+    switch (UIP_IP_BUF->proto) {
+      case UIP_PROTO_ICMP6:
+        icmp6_type = uip_buf[UIP_IPH_LEN];
+        break;
+      case UIP_PROTO_HBHO:
+        icmp6_type = uip_buf[UIP_IPH_LEN + 8];
+        break;
+      case UIP_PROTO_ROUTING:
+        icmp6_type = uip_buf[UIP_IPH_LEN + 16];
+        break;
+      default:
+        break;
+    }
+    LOG_INFO("Incoming packet proto: %d, ICMP6 type: %d\n", proto, icmp6_type);
   }
-  LOG_INFO("Dropping packet !\n");
-  return NETSTACK_IP_DROP;
+  else {
+    LOG_INFO("Incoming packet proto: %d\n", proto);
+  }
+  
+  if (proto != UIP_PROTO_ICMP6 || icmp6_type != ICMP6_RPL) {
+    LOG_INFO("Dropping packet !\n");
+    return NETSTACK_IP_DROP;
+  }
+
+  LOG_INFO("Processing packet !\n");
+  return NETSTACK_IP_PROCESS;
 }
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action
@@ -51,7 +69,7 @@ struct netstack_ip_packet_processor packet_processor = {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(decr_rank_attacker, ev, data)
+PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   PROCESS_BEGIN();
 

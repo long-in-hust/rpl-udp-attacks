@@ -16,32 +16,31 @@
 #define WITH_SERVER_REPLY  1
 
 /*---------------------------------------------------------------------------*/
-PROCESS(decr_rank_attacker, "RPL DAO Blackhole");
-AUTOSTART_PROCESSES(&decr_rank_attacker);
+PROCESS(blackhole_attacker, "RPL UDP Blackhole");
+AUTOSTART_PROCESSES(&blackhole_attacker);
 
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action
 ip_input(void)
 {
+  uip_ipaddr_t root_ipaddr;
   uint8_t proto = 0;
   uipbuf_get_last_header(uip_buf, uip_len, &proto);
-  LOG_INFO("Incoming packet proto: %d, from ", proto);
-  LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
-  LOG_INFO_("\n");
-  if (proto != UIP_PROTO_ICMP6 && proto != UIP_PROTO_HBHO) {
-    return NETSTACK_IP_PROCESS;
+  if (proto == UIP_PROTO_ICMP6) {
+    if (UIP_IP_BUF->proto == UIP_PROTO_ICMP6) {
+      LOG_INFO("Incoming packet proto: %d, ICMP6 type: %d\n", proto, UIP_ICMP_BUF->type);
+    }
+    if (UIP_IP_BUF->proto == UIP_PROTO_HBHO) {
+      LOG_INFO("Incoming packet proto: %d, ICMP6 type: %d\n", proto, uip_buf[48]);
+    }
   }
-  if (proto == UIP_PROTO_HBHO && uip_buf[40] != UIP_PROTO_ICMP6) {
-    return NETSTACK_IP_PROCESS;
-  }
-  LOG_INFO("ICMP6 type: %d - ICMP6 RPL code: %d from ", 
-      uip_buf[48], uip_buf[49]);
-  LOG_INFO_("\n");
-  
-  if (uip_buf[48] == ICMP6_RPL && uip_buf[49] == RPL_CODE_DAO) {
-    LOG_INFO("Dropping DAO packet !\n");
+  if(NETSTACK_ROUTING.node_is_reachable()
+       && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr))
+  {
+    LOG_INFO("Dropping packet !\n");
     return NETSTACK_IP_DROP;
   }
+  LOG_INFO("Processing packet !\n");
   return NETSTACK_IP_PROCESS;
 }
 /*---------------------------------------------------------------------------*/
@@ -58,7 +57,7 @@ struct netstack_ip_packet_processor packet_processor = {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(decr_rank_attacker, ev, data)
+PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   PROCESS_BEGIN();
 

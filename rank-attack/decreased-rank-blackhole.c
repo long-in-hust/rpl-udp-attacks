@@ -21,8 +21,8 @@ static rpl_rank_t min_rank;
 static uip_ipaddr_t root_ipaddr;
 
 /*---------------------------------------------------------------------------*/
-PROCESS(decr_rank_attacker, "Decreased rank attacker");
-AUTOSTART_PROCESSES(&decr_rank_attacker);
+PROCESS(blackhole_attacker, "Decreased rank attacker");
+AUTOSTART_PROCESSES(&blackhole_attacker);
 
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action
@@ -76,7 +76,7 @@ struct netstack_ip_packet_processor packet_processor = {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(decr_rank_attacker, ev, data)
+PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   static struct etimer periodic_timer;
 

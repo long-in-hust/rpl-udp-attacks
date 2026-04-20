@@ -16,8 +16,8 @@
 #define WITH_SERVER_REPLY  1
 
 /*---------------------------------------------------------------------------*/
-PROCESS(decr_rank_attacker, "RPL DIS flooder");
-AUTOSTART_PROCESSES(&decr_rank_attacker);
+PROCESS(blackhole_attacker, "RPL DIS flooder");
+AUTOSTART_PROCESSES(&blackhole_attacker);
 
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action
@@ -58,7 +58,7 @@ struct netstack_ip_packet_processor packet_processor = {
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
-PROCESS_THREAD(decr_rank_attacker, ev, data)
+PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   static struct etimer periodic_timer;
 
