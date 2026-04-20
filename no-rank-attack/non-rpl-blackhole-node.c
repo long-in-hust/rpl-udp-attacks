@@ -46,12 +46,14 @@ ip_input(void)
   else {
     LOG_INFO("Incoming packet proto: %d\n", proto);
   }
-  
-  if (proto != UIP_PROTO_ICMP6 || icmp6_type != ICMP6_RPL) {
-    LOG_INFO("Dropping packet !\n");
-    return NETSTACK_IP_DROP;
+  if(NETSTACK_ROUTING.node_is_reachable()
+       && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr))
+  {
+    if (proto != UIP_PROTO_ICMP6 || icmp6_type != ICMP6_RPL) {
+      LOG_INFO("Dropping packet !\n");
+      return NETSTACK_IP_DROP;
+    }
   }
-
   LOG_INFO("Processing packet !\n");
   return NETSTACK_IP_PROCESS;
 }
