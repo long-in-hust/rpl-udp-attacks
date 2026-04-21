@@ -72,12 +72,18 @@ PROCESS_THREAD(udp_client_process, ev, data)
   while(1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
 
+    /* Print current rank of the node */
+    LOG_INFO("Current node rank: %u, preferred parent rank: %u, dodag version: %u\n", curr_instance.dag.rank, curr_instance.dag.preferred_parent ? curr_instance.dag.preferred_parent->rank : 0, curr_instance.dag.version);
+    LOG_INFO("Preferred parent IP address: ");
+    if (curr_instance.dag.preferred_parent) {
+      LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(curr_instance.dag.preferred_parent));
+    } else {
+      LOG_INFO_("None");
+    }
+    LOG_INFO_("\n");
+
     if(NETSTACK_ROUTING.node_is_reachable()
        && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)) {
-      
-
-      /* Print current rank of the node */
-      LOG_INFO("Current node rank: %u, preferred parent rank: %u\n", curr_instance.dag.rank, curr_instance.dag.preferred_parent ? curr_instance.dag.preferred_parent->rank : 0);
       /* Print statistics every 10th TX */
       if(tx_count % 10 == 0) {
         LOG_INFO("Tx/Rx/MissedTx: %" PRIu32 "/%" PRIu32 "/%" PRIu32 "\n",

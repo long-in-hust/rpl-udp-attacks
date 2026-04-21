@@ -71,7 +71,7 @@ udp_rx_callback(struct simple_udp_connection *c,
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(udp_server_process, ev, data)
 {
-  static uip_ipaddr_t root_ipaddr;
+  // static uip_ipaddr_t root_ipaddr;
   static struct etimer periodic_timer;
   
   PROCESS_BEGIN();
@@ -85,9 +85,15 @@ PROCESS_THREAD(udp_server_process, ev, data)
                       UDP_CLIENT_PORT, udp_rx_callback);
 
   while (1) {
-    if (NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)) {
-      LOG_INFO("Current node rank: %u\n", curr_instance.dag.rank);
+    LOG_INFO("Current node rank: %u, preferred parent rank: %u, dodag version: %u", curr_instance.dag.rank, curr_instance.dag.preferred_parent ? curr_instance.dag.preferred_parent->rank : 0, curr_instance.dag.version);
+    LOG_INFO("Preferred parent IP address: ");
+    if (curr_instance.dag.preferred_parent) {
+      LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(curr_instance.dag.preferred_parent));
+    } else {
+      LOG_INFO_("None");
     }
+    LOG_INFO_("\n");
+    
     etimer_set(&periodic_timer, 5 * CLOCK_SECOND);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);

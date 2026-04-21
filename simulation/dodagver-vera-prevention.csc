@@ -75,7 +75,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-20.486127818800696" y="73.05116376889643" />
+          <pos x="-9.363292176439906" y="74.9049697092899" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -200,14 +200,14 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>2.2476282850740588 0.0 0.0 2.2476282850740588 393.9486322375173 212.4391214119382</viewport>
+      <viewport>2.6971539420888706 0.0 0.0 2.6971539420888706 394.81003868502137 288.5560656943259</viewport>
     </plugin_config>
     <bounds x="1" y="1" height="800" width="873" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>repair</filter>
+      <filter>ID:5</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
