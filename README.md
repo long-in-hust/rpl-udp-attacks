@@ -17,14 +17,14 @@ Repo này chứa các ví dụ về tấn công RPL bằng cách sử dụng UDP
 - Với DIS Flooding Attack: Tính tỉ lệ (DIS + 1) / (Tổng số gói + 2) theo chu kỳ và so sánh với ngưỡng để xác định xem có đang bị tấn công hay không. Nếu tỉ lệ vượt quá ngưỡng, nút sẽ bỏ qua các gói DIS tiếp theo đến khi tỉ lệ giảm xuống dưới ngưỡng hoặc qua chu kỳ tiếp theo.
     - Trạng thái: Đã triển khai.
 
-- Với DAG Version Attack: (Cân nhắc) Sử dụng VeRA (\[Ve\]rsion and \[R\]nk \[A\]uthentication).
+- Với DAG Version Attack: (Cân nhắc) Sử dụng VeRA (\[Ve\]rsion and \[R\]nk \[A\]uthentication). Version mới phải hash ra được thành phiên bản bản hiện tại để được xem là hợp lệ. Rank của nút xuất phát của gói tin DIO cũng phải hash ra được rank hợp lệ.
     - Trạng thái: Ý tưởng khả thi. Chưa thực hiện.
 
 - Với Rank Decrease Attack: N/A
     - Trạng thái: Chưa có ý tưởng.
 
-- Với Blackhole Attack: Đặt ngưỡng số lượng gói tin bị drop
-    - Trạng thái: Chưa có ý tưởng.
+- Với Blackhole Attack: Gửi gói tin kiểm tra, nếu không phản hồi sau một khoảng thời gian nhất định, đánh dấu nút đó là khả nghi. Tiếp tục gửi các nút xung quanh để kiểm tra, nếu các nút xung quanh trả về kết quả là nghi ngờ, đánh dấu nút đó là blackhole và bỏ qua các gói tin đến từ nó.
+    - Trạng thái: Ý tưởng khả thi. Chưa thực hiện.
 
 ## Cấu trúc thư mục:
 

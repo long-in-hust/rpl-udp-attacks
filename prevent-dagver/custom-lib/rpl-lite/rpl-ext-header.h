@@ -1,4 +1,7 @@
 /*
+ * Copyright (c) 2017, Inria.
+ * All rights reserved.
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -24,36 +27,64 @@
  * SUCH DAMAGE.
  *
  * This file is part of the Contiki operating system.
- *
  */
 
-#include "contiki.h"
-#include "net/routing/routing.h"
-#include "net/netstack.h"
-#include "sys/log.h"
-#define LOG_MODULE "App"
-#define LOG_LEVEL LOG_LEVEL_INFO
+/**
+ * \addtogroup rpl-lite
+ * @{
+ *
+ * \file
+ *         Header file for rpl-ext-header
+ *
+ * \author Simon Duquennoy <simon.duquennoy@inria.fr>
+ */
 
-#include "custom-lib/daghash.h"
+ #ifndef RPL_EXT_HEADER_H_
+ #define RPL_EXT_HEADER_H_
 
-PROCESS(root_node_process, "Root Node");
-AUTOSTART_PROCESSES(&root_node_process, &dis_counter);
-/*---------------------------------------------------------------------------*/
+/********** Public functions **********/
 
-/*---------------------------------------------------------------------------*/
-PROCESS_THREAD(root_node_process, ev, data)
-{
-  PROCESS_BEGIN();
+/**
+* Look for next hop from SRH of current uIP packet.
+*
+* \param ipaddr A pointer to the address where to store the next hop.
+* \return 1 if a next hop was found, 0 otherwise
+*/
+int rpl_ext_header_srh_get_next_hop(uip_ipaddr_t *ipaddr);
 
-  /* Initialize DAG root */
-  NETSTACK_ROUTING.root_start();
+/**
+* Process and update SRH in-place,
+* i.e. internal address swapping as per RFC6554
+* \return 1 if SRH found, 0 otherwise
+*/
+int rpl_ext_header_srh_update(void);
 
-  while (1)
-  {
-    PROCESS_YIELD();
-  }
-  
+/**
+* Process and update the RPL hop-by-hop extension headers of
+* the current uIP packet.
+*
+* \param ext_buf A pointer to the ext header buffer
+* \param opt_offset The offset within the extension header where
+* the option starts
+* \return 1 in case the packet is valid and to be processed further,
+* 0 in case the packet must be dropped.
+*/
+int rpl_ext_header_hbh_update(uint8_t *ext_buf, int opt_offset);
 
-  PROCESS_END();
-}
-/*---------------------------------------------------------------------------*/
+/**
+ * Adds/updates all RPL extension headers to current uIP packet.
+ *
+ * \return 1 in case of success, 0 otherwise
+*/
+int rpl_ext_header_update(void);
+
+/**
+ * Removes all RPL extension headers.
+ *
+ * \return true in case of success, false otherwise
+*/
+bool rpl_ext_header_remove(void);
+
+ /** @} */
+
+#endif /* RPL_EXT_HEADER_H_ */
