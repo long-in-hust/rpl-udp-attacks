@@ -17,8 +17,12 @@ Repo này chứa các ví dụ về tấn công RPL bằng cách sử dụng UDP
 - Với DIS Flooding Attack: Tính tỉ lệ (DIS + 1) / (Tổng số gói + 2) theo chu kỳ và so sánh với ngưỡng để xác định xem có đang bị tấn công hay không. Nếu tỉ lệ vượt quá ngưỡng, nút sẽ bỏ qua các gói DIS tiếp theo đến khi tỉ lệ giảm xuống dưới ngưỡng hoặc qua chu kỳ tiếp theo.
     - Trạng thái: Đã triển khai.
 
-- Với DAG Version Attack: (Cân nhắc) Sử dụng VeRA (\[Ve\]rsion and \[R\]nk \[A\]uthentication). Version mới phải hash ra được thành phiên bản bản hiện tại để được xem là hợp lệ. Rank của nút xuất phát của gói tin DIO cũng phải hash ra được rank hợp lệ.
-    - Trạng thái: Ý tưởng khả thi. Chưa thực hiện.
+- Với DAG Version Attack: (Cân nhắc) Sử dụng phiên bản giản lược từ VeRA (\[Ve\]rsion and \[R\]nk \[A\]uthentication). 
+    - Version mới phải hash ra được thành phiên bản bản hiện tại để được xem là hợp lệ. 
+    - Không hash rank để đơn giản hoá.
+    - Nút gửi sẽ phải là preferred parent của nút nhận để được xem là hợp lệ. Nếu preferred parent gửi phiên bản không hợp lệ, sẽ bị xoá khỏi các neighbor và đưa vào blacklist trong 1 phút. 
+    - Với nút root, mọi yêu cầu cập nhật phiên bản không hợp lệ sẽ bị bỏ qua và đưa vào blacklist.
+    - Trạng thái: Đã triển khai.
 
 - Với Rank Decrease Attack: N/A
     - Trạng thái: Chưa có ý tưởng.
@@ -34,10 +38,9 @@ Repo này chứa các ví dụ về tấn công RPL bằng cách sử dụng UDP
 
 ## Các thư mục chứa mã nguồn phòng chống:
 - prevent-dis: Chứa mã nguồn cho các nút được lập trình để phòng chống DIS flooding attack.
-- prevent-dagver: Chứa mã nguồn cho các nút được lập trình để phòng chống DAG version attack. (Hiện chưa có)
+- prevent-dagver: Chứa mã nguồn cho các nút được lập trình để phòng chống DAG version attack.
 - prevent-rank: Chứa mã nguồn cho các nút được lập trình để phòng chống rank decrease attack. (Hiện chưa có)
-- prevent-blackhole: Chứa mã nguồn cho các nút được lập trình để phòng chống blackhole attack. (Hiện chưa có)
-
+- prevent-blackhole: Chứa mã nguồn cho các nút được lập trình để phòng chống blackhole attack.
 ## Cách sử dụng repo này:
 1. Clone repo này về máy.
 2. Mở các thư mục con tưởng ứng, mở Makefile và sửa giá trị CONTIKI để trỏ đến thư mục Contiki-NG trên máy của bạn.
