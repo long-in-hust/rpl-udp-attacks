@@ -77,7 +77,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
       
 
       /* Print current rank of the node */
-      LOG_INFO("Current node rank: %u\n", curr_instance.dag.rank);
+      LOG_INFO("Current node rank: %u, preferred parent rank: %u\n", curr_instance.dag.rank, curr_instance.dag.preferred_parent ? curr_instance.dag.preferred_parent->rank : 0);
       /* Print statistics every 10th TX */
       if(tx_count % 10 == 0) {
         LOG_INFO("Tx/Rx/MissedTx: %" PRIu32 "/%" PRIu32 "/%" PRIu32 "\n",

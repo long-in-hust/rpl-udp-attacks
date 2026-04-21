@@ -85,7 +85,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="39.823504496384636" y="86.29893855405035" />
+          <pos x="33.594716536662595" y="84.07437142557819" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -151,7 +151,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="67.84097908370593" y="57.95012213808065" />
+          <pos x="67.39606565801151" y="52.61116102974747" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -183,7 +183,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="11.608710639144721" y="63.0525715058654" />
+          <pos x="11.608710639144721" y="53.70938956628233" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -207,11 +207,11 @@
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:3</filter>
+      <filter>repair</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="877" y="160" height="240" width="843" z="1" />
+    <bounds x="155" y="160" height="240" width="1565" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine

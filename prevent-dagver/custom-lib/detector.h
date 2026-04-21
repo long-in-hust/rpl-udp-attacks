@@ -10,9 +10,12 @@
 
 #include "rpl-lite/rpl.h"
 #include "rpl-lite/rpl-dag.h"
+#include "rpl-lite/rpl-neighbor.h"
+#include "net/nbr-table.h"
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/netstack.h"
+
 /*---------------------------------------------------------------------------*/
 static enum netstack_ip_action
 ip_input(void)
@@ -46,33 +49,26 @@ ip_input(void)
 
         if (icmp6_type == ICMP6_RPL && rpl_type == RPL_CODE_DIO)
         {
-            uint16_t dio_rank = (uip_buf[UIP_IPH_LEN + uip_ext_len + 6] << 8) | uip_buf[UIP_IPH_LEN + uip_ext_len + 7];
             if (uip_buf[UIP_IPH_LEN + uip_ext_len + 5] != curr_instance.dag.version)
             {
                 if (dag_ver_hash(uip_buf[UIP_IPH_LEN + uip_ext_len + 5])
                     != curr_instance.dag.version)
                 {
+                    if (!curr_instance.dag.preferred_parent && !rpl_dag_root_is_root()) {
+                        LOG_INFO("DIO with unexpected DAG version detected, but we don't have a preferred parent yet! Letting the packet through to allow us to join the DAG and get a valid DAG version.\n");
+                        return NETSTACK_IP_PROCESS;
+                    }
                     LOG_WARN("DIO with unexpected DAG version detected! DIO DAG version: %u, hashed DAG version: %u, current DAG version: %u\n",
                         uip_buf[UIP_IPH_LEN + uip_ext_len + 5], dag_ver_hash(uip_buf[UIP_IPH_LEN + uip_ext_len + 5]), curr_instance.dag.version);
                     LOG_INFO("Dropping packet with suspectedly forged DAG version !\n");
-                    if (curr_instance.dag.preferred_parent && dio_rank == curr_instance.dag.preferred_parent->rank) {
-                        LOG_WARN("Current preferred parent was malformed! Removing current preferred parent from the neighbor table.\n");
-                        rpl_nbr_t *nbr = curr_instance.dag.preferred_parent;
-                        curr_instance.dag.preferred_parent = NULL;
-                        nbr->rank = RPL_INFINITE_RANK;
-                        rpl_dag_update_state();
-                    }
+
                     return NETSTACK_IP_DROP;
-                }
-                else {
-                    if (curr_instance.dag.preferred_parent && dio_rank != curr_instance.dag.preferred_parent->rank) {
-                        LOG_WARN("DIO with unexpected rank detected! DIO rank: %u, current preferred parent rank: %u\n", dio_rank, curr_instance.dag.preferred_parent->rank);
-                        LOG_INFO("Dropping packet with suspectedly forged DAG version !\n");
-                        return NETSTACK_IP_DROP;
-                    }
                 }
             }
         }
+    }
+    if (curr_instance.dag.preferred_parent) {
+        LOG_INFO("Packet received from %u, current preferred parent rank: %u\n", UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr) - 1], curr_instance.dag.preferred_parent->rank);
     }
     return NETSTACK_IP_PROCESS;
 }
