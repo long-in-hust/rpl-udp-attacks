@@ -34,6 +34,8 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
+#include "custom-lib/daghash.h"
+
 PROCESS(root_node_process, "Root Node");
 AUTOSTART_PROCESSES(&root_node_process);
 /*---------------------------------------------------------------------------*/

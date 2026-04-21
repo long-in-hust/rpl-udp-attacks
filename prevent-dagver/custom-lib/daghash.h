@@ -1,8 +1,8 @@
-#ifndef DETECTOR_H
-#define DETECTOR_H
+#ifndef DAGHASH_H
+#define DAGHASH_H
 
 #include "contiki.h"
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl-lite/rpl.h"
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/netstack.h"
@@ -25,9 +25,9 @@ struct netstack_ip_packet_processor packet_processor = {
     .process_output = ip_output};
 /*---------------------------------------------------------------------------*/
 
-uint8_t dag_ver_hash(uint8_t input)
-{
-    return (input * 31) % 256;
-}
+// uint16_t dag_rank_hash(uint16_t input)
+// {
+//     return (input * 31) % 65536;
+// }
 
-#endif /* DETECTOR_H */
+#endif /* DAGHASH_H */

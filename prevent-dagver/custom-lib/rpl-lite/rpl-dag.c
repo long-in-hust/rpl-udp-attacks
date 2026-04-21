@@ -46,6 +46,7 @@
 #include "net/ipv6/uip-sr.h"
 #include "net/nbr-table.h"
 #include "net/link-stats.h"
+#include <stdlib.h> // for random number generation
 
 /* Log configuration */
 #include "sys/log.h"
@@ -56,6 +57,8 @@
 extern rpl_of_t rpl_of0, rpl_mrhof;
 static rpl_of_t * const objective_functions[] = RPL_SUPPORTED_OFS;
 static int process_dio_init_dag(rpl_dio_t *dio);
+static uint8_t dag_versions[MAX_DAG_VER_HASH_ENTRIES];
+static uint8_t dag_ver_index;
 
 /*---------------------------------------------------------------------------*/
 /* Allocate instance table. */
@@ -125,6 +128,11 @@ rpl_dag_leave(void)
 
   /* Mark instance as unused */
   curr_instance.used = 0;
+}
+/*---------------------------------------------------------------------------*/
+uint8_t dag_ver_hash(uint8_t input)
+{
+    return (input * 31) % 256;
 }
 /*---------------------------------------------------------------------------*/
 void
@@ -713,7 +721,17 @@ void
 rpl_dag_init_root(uint8_t instance_id, uip_ipaddr_t *dag_id,
             uip_ipaddr_t *prefix, unsigned prefix_len, uint8_t prefix_flags)
 {
-  uint8_t version = RPL_LOLLIPOP_INIT;
+  // this random number will be hashed to generate the last version number of the DAG
+  uint8_t random_init_number = rand() % 256;
+  dag_versions[MAX_DAG_VER_HASH_ENTRIES - 1] = dag_ver_hash(random_init_number);
+  // Loop until the first version number of the DAG, assign the version number by hashing the next version number
+  // The version calculation is intentionally done in reverse order, so
+  // the version assignment & update will take the value from element 0 first.
+  for (int i = MAX_DAG_VER_HASH_ENTRIES - 2; i >= 0; i--) {
+    dag_versions[i] = dag_ver_hash(dag_versions[i + 1]);
+  }
+  dag_ver_index = 0;
+  uint8_t version = dag_versions[dag_ver_index];
 
   /* If we're in an instance, first leave it */
   if(curr_instance.used) {

@@ -66,6 +66,11 @@ const char *rpl_dag_state_to_str(enum rpl_dag_state state);
 */
 int rpl_dag_get_root_ipaddr(uip_ipaddr_t *ipaddr);
 /**
+ * Create a hash of the DAG version number, which can be used to verify the integrity
+ * of the version number in incoming DIOs and detect version number forgery attacks.
+*/
+uint8_t dag_ver_hash(uint8_t input);
+/**
  * Start poisoning and leave the DAG after a delay
  *
 */

@@ -152,6 +152,10 @@
 #define RPL_MOP_STORING_NO_MULTICAST    2
 #define RPL_MOP_STORING_MULTICAST       3
 
+/* Custom DAG version hash configuration */
+#define MAX_DAG_VER_HASH_ENTRIES 32
+
+
  /** @} */
 
 #endif /* RPL_CONST_H */
