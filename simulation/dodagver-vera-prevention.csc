@@ -3,7 +3,7 @@
   <simulation>
     <title>rpl-dagver-attack-prevention</title>
     <speedlimit>20.0</speedlimit>
-    <randomseed>321457</randomseed>
+    <randomseed>321458</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
       org.contikios.cooja.radiomediums.UDGM
@@ -202,16 +202,16 @@
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
       <viewport>2.6971539420888706 0.0 0.0 2.6971539420888706 394.81003868502137 288.5560656943259</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" />
+    <bounds x="1" y="1" height="800" width="873" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:5</filter>
+      <filter>Blacklisting</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="155" y="160" height="240" width="1565" z="1" />
+    <bounds x="157" y="159" height="240" width="1565" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine

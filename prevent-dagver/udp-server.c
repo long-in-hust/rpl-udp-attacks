@@ -48,7 +48,7 @@
 static struct simple_udp_connection udp_conn;
 
 PROCESS(udp_server_process, "UDP server");
-AUTOSTART_PROCESSES(&udp_server_process);
+AUTOSTART_PROCESSES(&udp_server_process, &blacklist_resetter_process);
 /*---------------------------------------------------------------------------*/
 static void
 udp_rx_callback(struct simple_udp_connection *c,
@@ -85,8 +85,7 @@ PROCESS_THREAD(udp_server_process, ev, data)
                       UDP_CLIENT_PORT, udp_rx_callback);
 
   while (1) {
-    LOG_INFO("Current node rank: %u, preferred parent rank: %u, dodag version: %u", curr_instance.dag.rank, curr_instance.dag.preferred_parent ? curr_instance.dag.preferred_parent->rank : 0, curr_instance.dag.version);
-    LOG_INFO("Preferred parent IP address: ");
+    LOG_INFO("Current node rank: %u, preferred parent rank: %u, dodag version: %u - Preferred parent IP address: ", curr_instance.dag.rank, curr_instance.dag.preferred_parent ? curr_instance.dag.preferred_parent->rank : 0, curr_instance.dag.version);
     if (curr_instance.dag.preferred_parent) {
       LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(curr_instance.dag.preferred_parent));
     } else {

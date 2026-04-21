@@ -39,7 +39,7 @@
 #include "custom-lib/detector.h"
 
 PROCESS(root_node_process, "Root Node");
-AUTOSTART_PROCESSES(&root_node_process);
+AUTOSTART_PROCESSES(&root_node_process, &blacklist_resetter_process);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
