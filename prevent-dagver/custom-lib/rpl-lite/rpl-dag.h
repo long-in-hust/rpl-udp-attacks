@@ -71,6 +71,12 @@ int rpl_dag_get_root_ipaddr(uip_ipaddr_t *ipaddr);
 */
 uint8_t dag_ver_hash(uint8_t input);
 /**
+ * Initializes the DAG version hash chain
+ *
+ * \param input_value The initial value for the hash chain
+ */
+void dag_ver_chain_init(uint8_t input_value);
+/**
  * Start poisoning and leave the DAG after a delay
  *
 */

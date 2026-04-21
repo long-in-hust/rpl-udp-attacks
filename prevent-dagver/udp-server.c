@@ -31,11 +31,15 @@
 #include "net/routing/routing.h"
 #include "net/netstack.h"
 #include "net/ipv6/simple-udp.h"
-#include "net/routing/rpl-lite/rpl.h"
+// not needed as a modified version of rpl.h is included in the custom-lib to avoid abdundant inclusion of rpl code,
+// which increases the size of the compiled code.
+// #include "net/routing/rpl-lite/rpl.h"
 
 #include "sys/log.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
+
+#include "custom-lib/detector.h"
 
 #define WITH_SERVER_REPLY  1
 #define UDP_CLIENT_PORT	8765

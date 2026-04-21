@@ -34,7 +34,7 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
-#include "custom-lib/daghash.h"
+#include "custom-lib/detector.h"
 
 PROCESS(root_node_process, "Root Node");
 AUTOSTART_PROCESSES(&root_node_process);
@@ -45,6 +45,8 @@ PROCESS_THREAD(root_node_process, ev, data)
 {
   PROCESS_BEGIN();
 
+  // Activate the user-defined packet processor
+  netstack_ip_packet_processor_add(&packet_processor);
   /* Initialize DAG root */
   NETSTACK_ROUTING.root_start();
 

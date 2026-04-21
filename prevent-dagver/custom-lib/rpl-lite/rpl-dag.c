@@ -134,6 +134,16 @@ uint8_t dag_ver_hash(uint8_t input)
 {
     return (input * 31) % 256;
 }
+/*--------------------------------------------------------------------------- */
+void dag_ver_chain_init(uint8_t input_value) {
+  // Loop until the first version number of the DAG, assign the version number by hashing the next version number
+  // The version calculation is intentionally done in reverse order, so
+  // the version assignment & update will take the value from element 0 first.
+  dag_versions[MAX_DAG_VER_HASH_ENTRIES - 1] = dag_ver_hash(input_value);
+  for (int i = MAX_DAG_VER_HASH_ENTRIES - 2; i >= 0; i--) {
+    dag_versions[i] = dag_ver_hash(dag_versions[i + 1]);
+  }
+}
 /*---------------------------------------------------------------------------*/
 void
 rpl_dag_poison_and_leave(void)
@@ -212,7 +222,16 @@ void
 rpl_global_repair(const char *str)
 {
   if(rpl_dag_root_is_root()) {
-    RPL_LOLLIPOP_INCREMENT(curr_instance.dag.version);  /* New DAG version */
+    // RPL_LOLLIPOP_INCREMENT(curr_instance.dag.version);  /* New DAG version */
+    if (dag_ver_index == MAX_DAG_VER_HASH_ENTRIES - 1) {
+      /* Re-initialize the DAG version hash chain with 
+        the last version number of the old chain when we have used all versions 
+        in the current chain 
+      */
+      dag_ver_chain_init(dag_ver_index); 
+    }
+    dag_ver_index = (dag_ver_index + 1) % MAX_DAG_VER_HASH_ENTRIES; /* Update DAG version index to use the next version number in the hash chain */
+    curr_instance.dag.version = dag_versions[dag_ver_index]; /* Update DAG version to the new version number from the hash chain */
     curr_instance.dtsn_out = RPL_LOLLIPOP_INIT;  /* Re-initialize DTSN */
 
     LOG_WARN("initiating global repair (%s), version %u, rank %u\n",
@@ -723,13 +742,7 @@ rpl_dag_init_root(uint8_t instance_id, uip_ipaddr_t *dag_id,
 {
   // this random number will be hashed to generate the last version number of the DAG
   uint8_t random_init_number = rand() % 256;
-  dag_versions[MAX_DAG_VER_HASH_ENTRIES - 1] = dag_ver_hash(random_init_number);
-  // Loop until the first version number of the DAG, assign the version number by hashing the next version number
-  // The version calculation is intentionally done in reverse order, so
-  // the version assignment & update will take the value from element 0 first.
-  for (int i = MAX_DAG_VER_HASH_ENTRIES - 2; i >= 0; i--) {
-    dag_versions[i] = dag_ver_hash(dag_versions[i + 1]);
-  }
+  dag_ver_chain_init(random_init_number); /* Initialize the DAG version hash chain with a random number */
   dag_ver_index = 0;
   uint8_t version = dag_versions[dag_ver_index];
 
