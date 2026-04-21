@@ -54,10 +54,6 @@ ip_input(void)
                 if (dag_ver_hash(uip_buf[UIP_IPH_LEN + uip_ext_len + 5])
                     != curr_instance.dag.version)
                 {
-                    if (!curr_instance.dag.preferred_parent && !rpl_dag_root_is_root()) {
-                        LOG_INFO("DIO with unexpected DAG version detected, but we don't have a preferred parent yet! Letting the packet through to allow us to join the DAG and get a valid DAG version.\n");
-                        return NETSTACK_IP_PROCESS;
-                    }
                     LOG_WARN("DIO with unexpected DAG version detected! DIO DAG version: %u, hashed DAG version: %u, current DAG version: %u\n",
                         uip_buf[UIP_IPH_LEN + uip_ext_len + 5], dag_ver_hash(uip_buf[UIP_IPH_LEN + uip_ext_len + 5]), curr_instance.dag.version);
                     LOG_INFO("Dropping packet with suspectedly forged DAG version !\n");
