@@ -3,7 +3,7 @@
   <simulation>
     <title>rpl-dagver-attack-prevention</title>
     <speedlimit>20.0</speedlimit>
-    <randomseed>321456</randomseed>
+    <randomseed>321457</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
       org.contikios.cooja.radiomediums.UDGM
@@ -18,7 +18,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Root Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/prevent-dagver/udp-root.c</source>
+      <source>[CONFIG_DIR]/../prevent-dagver/udp-root.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-root.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -54,7 +54,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Client Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/prevent-dagver/udp-client.c</source>
+      <source>[CONFIG_DIR]/../prevent-dagver/udp-client.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -85,7 +85,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="19.80240034013521" y="110.32426354154967" />
+          <pos x="39.823504496384636" y="86.29893855405035" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -119,7 +119,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="45.74978350302775" y="45.62094668726336" />
+          <pos x="30.177813603722644" y="27.37949623379167" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -130,7 +130,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Server Mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/prevent-dagver/udp-server.c</source>
+      <source>[CONFIG_DIR]/../prevent-dagver/udp-server.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -151,7 +151,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="78.96381472606673" y="71.74243833460802" />
+          <pos x="67.84097908370593" y="57.95012213808065" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -162,7 +162,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DODAG Version Messing mote</description>
-      <source>[CONTIKI_DIR]/examples/rpl-udp-attacks/no-rank-attack/dag-version-dio.c</source>
+      <source>[CONFIG_DIR]/../no-rank-attack/dag-version-dio.c</source>
       <commands>$(MAKE) -j$(CPUS) dag-version-dio.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -207,7 +207,7 @@
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:8</filter>
+      <filter>ID:3</filter>
       <formatted_time />
       <coloring />
     </plugin_config>

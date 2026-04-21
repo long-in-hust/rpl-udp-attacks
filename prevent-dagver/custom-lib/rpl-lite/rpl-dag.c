@@ -745,13 +745,15 @@ rpl_dag_init_root(uint8_t instance_id, uip_ipaddr_t *dag_id,
   dag_ver_chain_init(random_init_number); /* Initialize the DAG version hash chain with a random number */
   dag_ver_index = 0;
   uint8_t version = dag_versions[dag_ver_index];
+  LOG_INFO("DAG version initialized to %u\n", version);
 
   /* If we're in an instance, first leave it */
   if(curr_instance.used) {
     /* We were already root. Increment version */
     if(uip_ipaddr_cmp(&curr_instance.dag.dag_id, dag_id)) {
       version = curr_instance.dag.version;
-      RPL_LOLLIPOP_INCREMENT(version);
+      // RPL_LOLLIPOP_INCREMENT(version);
+      version = dag_versions[(dag_ver_index + 1) % MAX_DAG_VER_HASH_ENTRIES]; /* Get the next version number from the hash chain */
     }
     rpl_dag_leave();
   }
@@ -773,6 +775,7 @@ rpl_dag_init_root(uint8_t instance_id, uip_ipaddr_t *dag_id,
   curr_instance.dag.preference = RPL_PREFERENCE;
   curr_instance.dag.grounded = RPL_GROUNDED;
   curr_instance.dag.version = version;
+  LOG_INFO("DAG version initialized to %u\n", version);
   curr_instance.dag.rank = ROOT_RANK;
   curr_instance.dag.lifetime = RPL_LIFETIME(RPL_INFINITE_LIFETIME);
   /* dio_intcurrent will be reset by rpl_timers_dio_reset() */

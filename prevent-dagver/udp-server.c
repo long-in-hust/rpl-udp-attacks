@@ -79,6 +79,8 @@ PROCESS_THREAD(udp_server_process, ev, data)
   /* Initialize UDP connection */
   LOG_INFO("UDP has server started.");
   LOG_INFO_("\n");
+  // Activate the user-defined packet processor
+  netstack_ip_packet_processor_add(&packet_processor);
   simple_udp_register(&udp_conn, UDP_SERVER_PORT, NULL,
                       UDP_CLIENT_PORT, udp_rx_callback);
 
