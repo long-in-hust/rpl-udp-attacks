@@ -38,7 +38,8 @@ ip_input(void)
 
         if (icmp6_type == ICMP6_RPL && rpl_type == RPL_CODE_DIO)
         {
-            if (dag_ver_hash(uip_buf[UIP_IPH_LEN + uip_ext_len + 5])
+            if (uip_buf[UIP_IPH_LEN + uip_ext_len + 5] != curr_instance.dag.version &&
+                dag_ver_hash(uip_buf[UIP_IPH_LEN + uip_ext_len + 5])
                 != curr_instance.dag.version)
             {
                 LOG_WARN("DIO with unexpected DAG version detected! DIO DAG version: %u, hashed DAG version: %u, current DAG version: %u\n",
