@@ -37,7 +37,7 @@
 #include "custom-lib/detector.h"
 
 PROCESS(root_node_process, "Root Node");
-AUTOSTART_PROCESSES(&root_node_process, &dis_counter);
+AUTOSTART_PROCESSES(&root_node_process);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

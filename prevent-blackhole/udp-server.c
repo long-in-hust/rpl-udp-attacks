@@ -46,7 +46,7 @@
 static struct simple_udp_connection udp_conn;
 
 PROCESS(udp_server_process, "UDP server");
-AUTOSTART_PROCESSES(&udp_server_process, &dis_counter);
+AUTOSTART_PROCESSES(&udp_server_process);
 /*---------------------------------------------------------------------------*/
 static void
 udp_rx_callback(struct simple_udp_connection *c,
