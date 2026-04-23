@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = udp-client udp-root udp-server dis-flooder dag-version-dio general-blackhole-node
+CONTIKI_PROJECT = udp-client udp-root udp-server
 all: $(CONTIKI_PROJECT)
 
 CONTIKI=../../..
