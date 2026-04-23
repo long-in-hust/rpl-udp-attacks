@@ -96,10 +96,11 @@ static void verification_received_callback(struct simple_udp_connection *c,
          uint16_t datalen)
 {
     uip_ip6addr_t suspect_ip, initiator_ip;
-    switch (data[0]) // the first byte of the payload is the packet type identifier
+    switch (UIP_BUF_BH_VERIF(data)->type) // the first byte of the payload is the packet type identifier
     {
         case VERIFICATION_REQ_TYPE:
             uip_ip6addr_copy(&suspect_ip, &UDP_BUF_VER_REQ(data)->suspect_ip);
+            
             break;
         case SUSPECT_VERIFICATION_REQ_TYPE:
             uip_ip6addr_copy(&initiator_ip, &UDP_BUF_SUSPECT_VER_REQ(data)->initiator_ip);

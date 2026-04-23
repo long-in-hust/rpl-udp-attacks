@@ -14,6 +14,7 @@
 #define SUSPECT_CLEAN_RESP_TYPE 3
 #define VERIFICATION_CONF_TYPE 4
 
+#define UIP_BUF_BH_VERIF(udp_appdata)               ((generic_bh_verif_pkt_t *) udp_appdata)
 #define UDP_BUF_VER_REQ(udp_appdata)                ((verification_req_t *) udp_appdata)
 #define UDP_BUF_SUSPECT_VER_REQ(udp_appdata)        ((suspect_verification_req_t *) udp_appdata)
 #define UDP_BUF_SUSPECT_CLEAN_RESP(udp_appdata)     ((suspect_clean_resp_t *) udp_appdata)
