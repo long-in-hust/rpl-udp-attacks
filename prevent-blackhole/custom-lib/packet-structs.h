@@ -44,7 +44,8 @@ typedef struct suspect_verification_request_packet suspect_verification_req_t;
 struct suspect_clean_response_packet {
     uint8_t type; // Packet type identifier
     uip_ip6addr_t initiator_ip; // IP address of the node initiating the verification
-    uip_ip6addr_t suspect_ip; // IP address of the suspected blackhole node
+    // since the suspected node will send this packet, there is no need to include the suspected node's IP address
+    // in the packet as the initiator can get it from the source IP address of the received packet
 };
 typedef struct suspect_clean_response_packet suspect_clean_resp_t;
 
