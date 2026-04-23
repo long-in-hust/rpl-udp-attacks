@@ -53,6 +53,8 @@ ip_input(void)
     uint8_t proto = 0;
     uipbuf_get_last_header(uip_buf, uip_len, &proto);
 
+    LOG_INFO("Packet length: %u\n", uip_len);
+
     uip_ext_len = calculate_uip_ip6_ext_hdr_len(uip_buf);
 
     if (proto == UIP_PROTO_ICMP6)
@@ -94,20 +96,21 @@ static void verification_received_callback(struct simple_udp_connection *c,
          uint16_t datalen)
 {
     uip_ip6addr_t suspect_ip, initiator_ip;
-    switch (UIP_BUF_BH_VERIF->type) {
+    switch (data[0]) // the first byte of the payload is the packet type identifier
+    {
         case VERIFICATION_REQ_TYPE:
-            uip_ip6addr_copy(&suspect_ip, &UIP_BUF_VER_REQ->suspect_ip);
+            uip_ip6addr_copy(&suspect_ip, &UDP_BUF_VER_REQ(data)->suspect_ip);
             break;
         case SUSPECT_VERIFICATION_REQ_TYPE:
-            uip_ip6addr_copy(&initiator_ip, &UIP_BUF_SUSPECT_VER_REQ->initiator_ip);
+            uip_ip6addr_copy(&initiator_ip, &UDP_BUF_SUSPECT_VER_REQ(data)->initiator_ip);
             break;
         case SUSPECT_CLEAN_RESP_TYPE:
-            uip_ip6addr_copy(&initiator_ip, &UIP_BUF_SUSPECT_CLEAN_RESP->initiator_ip);
-            uip_ip6addr_copy(&suspect_ip, &UIP_BUF_SUSPECT_CLEAN_RESP->suspect_ip);
+            uip_ip6addr_copy(&initiator_ip, &UDP_BUF_SUSPECT_CLEAN_RESP(data)->initiator_ip);
+            uip_ip6addr_copy(&suspect_ip, &UDP_BUF_SUSPECT_CLEAN_RESP(data)->suspect_ip);
             break;
         case VERIFICATION_CONF_TYPE:
             trust_timer_reset = true;
-            uip_ip6addr_copy(&suspect_ip, &UIP_BUF_VER_CONF->suspect_ip);
+            uip_ip6addr_copy(&suspect_ip, &UDP_BUF_VER_CONF(data)->suspect_ip);
             break;
         default:
             LOG_INFO("Unknown packet type received in verification_received function.\n");
@@ -136,8 +139,12 @@ PROCESS_THREAD(detector_process, ev, data)
         {
             LOG_INFO("No packet received from preferred parent in the last %d seconds. Suspecting a blackhole.\n", TRUST_SECONDS);
         }
-        trust_timer_reset = false;
-        etimer_reset(&trust_timer);
+        else if (trust_timer_reset)
+        {
+            LOG_INFO("Packet received from preferred parent. Resetting trust timer.\n");
+            etimer_reset(&trust_timer);
+            trust_timer_reset = false;
+        }
     }
 
     PROCESS_END();
@@ -151,7 +158,9 @@ PROCESS_THREAD(verification_udp_process, ev, data)
     PROCESS_BEGIN();
     simple_udp_register(&verif_udp_conn, UDP_PORT_BHVERIF, NULL,
                       UDP_PORT_BHVERIF, verification_received_callback);
-
+    while(1) {
+        PROCESS_YIELD();
+    }
     PROCESS_END();
 }
 

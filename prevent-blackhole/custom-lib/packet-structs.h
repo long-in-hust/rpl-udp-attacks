@@ -14,12 +14,10 @@
 #define SUSPECT_CLEAN_RESP_TYPE 3
 #define VERIFICATION_CONF_TYPE 4
 
-#define UIP_BUF_BH_VERIF     ((struct generic_bh_verification_packet *)UIP_IP_PAYLOAD(uip_ext_len + UIP_UDPH_LEN))
-
-#define UIP_BUF_VER_REQ     ((struct verification_request_packet *)UIP_IP_PAYLOAD(uip_ext_len + UIP_UDPH_LEN))
-#define UIP_BUF_SUSPECT_VER_REQ ((struct suspect_verification_request_packet *)UIP_IP_PAYLOAD(uip_ext_len + UIP_UDPH_LEN))
-#define UIP_BUF_SUSPECT_CLEAN_RESP ((struct suspect_clean_response_packet *)UIP_IP_PAYLOAD(uip_ext_len + UIP_UDPH_LEN))
-#define UIP_BUF_VER_CONF ((struct verification_confirmation_packet *)UIP_IP_PAYLOAD(uip_ext_len + UIP_UDPH_LEN))
+#define UDP_BUF_VER_REQ(udp_appdata)                ((verification_req_t *) udp_appdata)
+#define UDP_BUF_SUSPECT_VER_REQ(udp_appdata)        ((suspect_verification_req_t *) udp_appdata)
+#define UDP_BUF_SUSPECT_CLEAN_RESP(udp_appdata)     ((suspect_clean_resp_t *) udp_appdata)
+#define UDP_BUF_VER_CONF(udp_appdata)               ((verification_conf_t *) udp_appdata)
 
 // packet structures for the different types of packets used in the detection mechanism
 struct generic_bh_verification_packet {
