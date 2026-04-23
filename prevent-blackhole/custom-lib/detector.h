@@ -150,6 +150,7 @@ PROCESS_THREAD(detector_process, ev, data)
     etimer_set(&trust_timer, TRUST_SECONDS * CLOCK_SECOND);
     while (1)
     {
+        PROCESS_WAIT_EVENT_UNTIL(suspected_node_is_safe);
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&trust_timer) || trust_timer_reset);
         if (etimer_expired(&trust_timer) && !trust_timer_reset &&
              NETSTACK_ROUTING.node_is_reachable() && curr_instance.dag.preferred_parent)
