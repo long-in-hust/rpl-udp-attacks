@@ -41,6 +41,7 @@ Repo này chứa các ví dụ về tấn công RPL bằng cách sử dụng UDP
 - prevent-dagver: Chứa mã nguồn cho các nút được lập trình để phòng chống DAG version attack.
 - prevent-rank: Chứa mã nguồn cho các nút được lập trình để phòng chống rank decrease attack. (Hiện chưa có)
 - prevent-blackhole: Chứa mã nguồn cho các nút được lập trình để phòng chống blackhole attack.
+
 ## Cách sử dụng repo này:
 1. Clone repo này về máy.
 2. Mở các thư mục con tưởng ứng, mở Makefile và sửa giá trị CONTIKI để trỏ đến thư mục Contiki-NG trên máy của bạn.
