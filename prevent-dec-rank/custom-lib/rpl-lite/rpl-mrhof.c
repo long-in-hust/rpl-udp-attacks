@@ -194,34 +194,30 @@ nbr_is_acceptable_parent(rpl_nbr_t *nbr)
   return nbr_has_usable_link(nbr) && path_cost <= MAX_PATH_COST;
 }
 /*---------------------------------------------------------------------------*/
-static int rank_check(rpl_nbr_t *nbr) {
-  
-  if (curr_instance.dag.preferred_parent && nbr) {
-    if (curr_instance.dag.grounded) {
-      return nbr->rank > curr_instance.dag.preferred_parent->rank - RANK_MINIMUM_DIFFERENCE;
-    }
-    else {
-      return (nbr->rank > curr_instance.dag.preferred_parent->rank - RANK_MINIMUM_DIFFERENCE)
-        && (nbr->hop_count > curr_instance.dag.preferred_parent->hop_count);
-    }
-  }
-  return 0;
-}
-/*---------------------------------------------------------------------------*/
 static int
 within_hysteresis(rpl_nbr_t *nbr)
 {
   uint16_t path_cost = nbr_path_cost(nbr);
   uint16_t parent_path_cost = nbr_path_cost(curr_instance.dag.preferred_parent);
 
-  int within_rank_hysteresis = (path_cost + RANK_THRESHOLD > parent_path_cost) 
-    || (true);
+  int within_rank_hysteresis = path_cost + RANK_THRESHOLD > parent_path_cost;
   int within_time_hysteresis = nbr->better_parent_since == 0
     || (clock_time() - nbr->better_parent_since) <= TIME_THRESHOLD;
 
   /* As we want to consider neighbors that are either beyond the rank or time
   hystereses, return 1 here iff the neighbor is within both hystereses. */
   return within_rank_hysteresis && within_time_hysteresis;
+}
+static int valid_hop_count(rpl_nbr_t *nbr) {
+  if (nbr == NULL) {
+    return 0;
+  }
+  if (nbr->hop_count == 0 && nbr->rank == ROOT_RANK) {
+    return 1;
+  }
+  else {
+    return nbr->hop_count > 0 && nbr->hop_count < RPL_INFINITE_HOP_COUNT;
+  }
 }
 /*---------------------------------------------------------------------------*/
 static rpl_nbr_t *
@@ -242,12 +238,25 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
 
   /* Maintain stability of the preferred parent. Switch only if the gain
   is greater than RANK_THRESHOLD, or if the neighbor has been better than the
-  current parent for at more than TIME_THRESHOLD. */
-  if(nbr1 == curr_instance.dag.preferred_parent && within_hysteresis(nbr2)) {
+  current parent for at more than TIME_THRESHOLD, or if the neighbor has a 
+  lower hop count. */
+  if(nbr1 == curr_instance.dag.preferred_parent && within_hysteresis(nbr2))
+  {
     return nbr1;
   }
-  if(nbr2 == curr_instance.dag.preferred_parent && within_hysteresis(nbr1)) {
+  if(nbr2 == curr_instance.dag.preferred_parent && within_hysteresis(nbr1)
+      && !valid_hop_count(nbr1) && (nbr2->hop_count <= nbr1->hop_count)) {
     return nbr2;
+  }
+  if (curr_instance.dag.grounded) {
+    if (nbr1 == curr_instance.dag.preferred_parent &&
+        !valid_hop_count(nbr2) && (nbr1->hop_count <= nbr2->hop_count)) {
+      return nbr1;
+    }
+    if (nbr2 == curr_instance.dag.preferred_parent &&
+        !valid_hop_count(nbr1) && (nbr2->hop_count <= nbr1->hop_count)) {
+      return nbr2;
+    }
   }
 
   return nbr_path_cost(nbr1) < nbr_path_cost(nbr2) ? nbr1 : nbr2;
