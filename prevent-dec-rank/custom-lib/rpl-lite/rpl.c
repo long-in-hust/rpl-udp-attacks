@@ -41,7 +41,7 @@
  *  Simon Duquennoy <simon.duquennoy@inria.fr>
  */
 
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/routing/routing.h"
 
 /* Log configuration */

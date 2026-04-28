@@ -31,7 +31,7 @@
 #include "net/routing/routing.h"
 #include "net/netstack.h"
 #include "net/ipv6/simple-udp.h"
-#include "net/routing/rpl-lite/rpl.h"
+#include "custom-lib/rpl-lite/rpl.h"
 
 #include "sys/log.h"
 #define LOG_MODULE "App"

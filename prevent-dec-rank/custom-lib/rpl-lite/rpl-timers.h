@@ -47,7 +47,7 @@
 
 /********** Includes **********/
 
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 
 /********** Public functions **********/
 

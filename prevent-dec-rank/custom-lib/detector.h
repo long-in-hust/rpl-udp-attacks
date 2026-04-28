@@ -2,7 +2,7 @@
 #define DETECTOR_H
 
 #include "contiki.h"
-#include "net/routing/rpl-lite/rpl.h"
+#include "custom-lib/rpl-lite/rpl.h"
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/netstack.h"

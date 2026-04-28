@@ -34,7 +34,7 @@
   * @{
   */
 
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/nbr-table.h"
 #include "net/link-stats.h"
 #include "net/ipv6/uip-ds6-route.h"

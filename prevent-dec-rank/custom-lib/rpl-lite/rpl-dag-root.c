@@ -40,7 +40,7 @@
 #include "contiki.h"
 #include "contiki-net.h"
 
-#include "net/routing/rpl-lite/rpl.h"
+#include "rpl.h"
 #include "net/ipv6/uip-ds6-route.h"
 #include "net/ipv6/uip-sr.h"
 
