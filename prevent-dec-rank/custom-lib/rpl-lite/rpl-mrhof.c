@@ -208,6 +208,9 @@ within_hysteresis(rpl_nbr_t *nbr)
   hystereses, return 1 here iff the neighbor is within both hystereses. */
   return within_rank_hysteresis && within_time_hysteresis;
 }
+/*---------------------------------------------------------------------------*/
+/* Check if the neighbor has a valid hop count. A hop count of 0 is only valid
+ * for the root. */
 static int valid_hop_count(rpl_nbr_t *nbr) {
   if (nbr == NULL) {
     return 0;
@@ -239,8 +242,7 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
 
   /* Maintain stability of the preferred parent. Switch only if the gain
   is greater than RANK_THRESHOLD, or if the neighbor has been better than the
-  current parent for at more than TIME_THRESHOLD, or if the neighbor has a 
-  lower hop count. */
+  current parent for at more than TIME_THRESHOLD. */
   if(nbr1 == curr_instance.dag.preferred_parent && within_hysteresis(nbr2))
   {
     return nbr1;
@@ -249,6 +251,9 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
       && !valid_hop_count(nbr1) && (nbr2->hop_count <= nbr1->hop_count)) {
     return nbr2;
   }
+
+  /* If the DAG is grounded, add a preference for parents with a 
+  valid hop count that is lower than the current preferred parent. */
   if (curr_instance.dag.grounded) {
     if (nbr1 == curr_instance.dag.preferred_parent &&
         !valid_hop_count(nbr2) && (nbr1->hop_count <= nbr2->hop_count)) {
