@@ -75,6 +75,9 @@
 #define RPL_MRHOF_SQUARED_ETX 0
 #endif /* RPL_MRHOF_CONF_SQUARED_ETX */
 
+/* Rank difference between the new best parent and the current preferred parent*/
+#define RANK_MINIMUM_DIFFERENCE 128
+
 /* Configuration parameters of RFC6719. Reject parents that have a higher
  * link metric than the following. The default value is 512. */
 #ifdef RPL_MRHOF_CONF_MAX_LINK_METRIC
@@ -191,13 +194,28 @@ nbr_is_acceptable_parent(rpl_nbr_t *nbr)
   return nbr_has_usable_link(nbr) && path_cost <= MAX_PATH_COST;
 }
 /*---------------------------------------------------------------------------*/
+static int rank_check(rpl_nbr_t *nbr) {
+  
+  if (curr_instance.dag.preferred_parent && nbr) {
+    if (curr_instance.dag.grounded) {
+      return nbr->rank > curr_instance.dag.preferred_parent->rank - RANK_MINIMUM_DIFFERENCE;
+    }
+    else {
+      return (nbr->rank > curr_instance.dag.preferred_parent->rank - RANK_MINIMUM_DIFFERENCE)
+        && (nbr->hop_count > curr_instance.dag.preferred_parent->hop_count);
+    }
+  }
+  return 0;
+}
+/*---------------------------------------------------------------------------*/
 static int
 within_hysteresis(rpl_nbr_t *nbr)
 {
   uint16_t path_cost = nbr_path_cost(nbr);
   uint16_t parent_path_cost = nbr_path_cost(curr_instance.dag.preferred_parent);
 
-  int within_rank_hysteresis = path_cost + RANK_THRESHOLD > parent_path_cost;
+  int within_rank_hysteresis = (path_cost + RANK_THRESHOLD > parent_path_cost) 
+    || (true);
   int within_time_hysteresis = nbr->better_parent_since == 0
     || (clock_time() - nbr->better_parent_since) <= TIME_THRESHOLD;
 
