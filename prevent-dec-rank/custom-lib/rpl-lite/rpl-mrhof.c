@@ -216,8 +216,9 @@ static int valid_hop_count(rpl_nbr_t *nbr) {
     return 1;
   }
   else {
-    return nbr->hop_count > 0 && nbr->hop_count < RPL_INFINITE_HOP_COUNT;
+    return nbr->hop_count > 0;
   }
+  return 0;
 }
 /*---------------------------------------------------------------------------*/
 static rpl_nbr_t *
