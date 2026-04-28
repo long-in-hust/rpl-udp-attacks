@@ -332,6 +332,9 @@ dio_input(void)
         /* 32-bit reserved at i + 12 */
         memcpy(&dio.prefix_info.prefix, &buffer[i + 16], 16);
         break;
+      case RPL_OPTION_HOPS:
+        dio.hops_count = buffer[i + 2];
+        break;
       default:
         LOG_WARN("dio_input: unsupported suboption type in DIO: %u, discard\n", (unsigned)subopt_type);
         goto discard;
@@ -456,6 +459,10 @@ rpl_icmp6_dio_output(uip_ipaddr_t *uc_addr)
     memcpy(&buffer[pos], &curr_instance.dag.prefix_info.prefix, 16);
     pos += 16;
   }
+
+  buffer[pos++] = RPL_OPTION_HOPS;
+  buffer[pos++] = 1;
+  buffer[pos++] = curr_instance.dag.hop_count;
 
   if(!rpl_get_leaf_only()) {
     addr = addr != NULL ? addr : &rpl_multicast_addr;
