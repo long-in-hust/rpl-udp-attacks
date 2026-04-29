@@ -142,6 +142,7 @@ struct rpl_nbr {
 #endif /* RPL_WITH_MC */
   rpl_rank_t rank;
   uint8_t dtsn;
+  uint8_t hops_count;
 };
 typedef struct rpl_nbr rpl_nbr_t;
 
@@ -219,6 +220,7 @@ struct rpl_dag {
   struct ctimer dao_ack_timer;
   uint16_t dao_ack_sequence;
 #endif /* RPL_WITH_DAO_ACK */
+  uint8_t hops_count;
 };
 typedef struct rpl_dag rpl_dag_t;
 
