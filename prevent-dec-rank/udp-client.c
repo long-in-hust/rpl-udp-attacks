@@ -11,7 +11,7 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
-#include "custom-lib/detector.h"
+// #include "custom-lib/detector.h"
 
 #define WITH_SERVER_REPLY  1
 #define UDP_CLIENT_PORT	8765

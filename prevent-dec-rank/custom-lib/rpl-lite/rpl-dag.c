@@ -293,7 +293,11 @@ rpl_dag_update_state(void)
     /* Update rank  */
     curr_instance.dag.rank = rpl_neighbor_rank_via_nbr(curr_instance.dag.preferred_parent);
     /* Update hop count */
-    curr_instance.dag.hops_count = curr_instance.dag.preferred_parent->hops_count + 1;
+    if (curr_instance.dag.preferred_parent) {
+      curr_instance.dag.hops_count = curr_instance.dag.preferred_parent->hops_count + 1;
+    } else {
+      curr_instance.dag.hops_count = 0;
+    }
 
     /* Update better_parent_since flag for each neighbor */
     nbr = nbr_table_head(rpl_neighbors);

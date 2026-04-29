@@ -15,19 +15,6 @@ static int dis_packets = 0;
 static enum netstack_ip_action
 ip_input(void)
 {
-    total_packets++;
-    uint8_t proto = 0;
-    uipbuf_get_last_header(uip_buf, uip_len, &proto);
-    if (proto != UIP_PROTO_ICMP6 ||
-        UIP_ICMP_BUF->type != ICMP6_RPL ||
-        UIP_ICMP_BUF->icode != RPL_CODE_DIS) {
-        return NETSTACK_IP_PROCESS;
-    }
-    dis_packets++;
-    float dis_ratio = (float)(dis_packets + 1) / (float)(total_packets + 2);
-    if (dis_ratio > RPL_DIS_PREVENTION_THRESHOLD) {
-        return NETSTACK_IP_DROP;
-    }
     return NETSTACK_IP_PROCESS;
 }
 /*---------------------------------------------------------------------------*/
