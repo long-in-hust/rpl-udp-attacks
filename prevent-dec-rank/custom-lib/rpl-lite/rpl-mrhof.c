@@ -215,11 +215,11 @@ static int valid_hop_count(rpl_nbr_t *nbr) {
   if (nbr == NULL) {
     return 0;
   }
-  if (nbr->hop_count == 0 && nbr->rank == ROOT_RANK) {
+  if (nbr->hops_count == 0 && nbr->rank == ROOT_RANK) {
     return 1;
   }
   else {
-    return nbr->hop_count > 0;
+    return nbr->hops_count > 0;
   }
   return 0;
 }
@@ -248,7 +248,7 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
     return nbr1;
   }
   if(nbr2 == curr_instance.dag.preferred_parent && within_hysteresis(nbr1)
-      && !valid_hop_count(nbr1) && (nbr2->hop_count <= nbr1->hop_count)) {
+      && !valid_hop_count(nbr1) && (nbr2->hops_count <= nbr1->hops_count)) {
     return nbr2;
   }
 
@@ -256,11 +256,11 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
   valid hop count that is lower than the current preferred parent. */
   if (curr_instance.dag.grounded) {
     if (nbr1 == curr_instance.dag.preferred_parent &&
-        !valid_hop_count(nbr2) && (nbr1->hop_count <= nbr2->hop_count)) {
+        !valid_hop_count(nbr2) && (nbr1->hops_count <= nbr2->hops_count)) {
       return nbr1;
     }
     if (nbr2 == curr_instance.dag.preferred_parent &&
-        !valid_hop_count(nbr1) && (nbr2->hop_count <= nbr1->hop_count)) {
+        !valid_hop_count(nbr1) && (nbr2->hops_count <= nbr1->hops_count)) {
       return nbr2;
     }
   }

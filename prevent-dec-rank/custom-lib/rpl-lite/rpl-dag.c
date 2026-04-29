@@ -293,7 +293,7 @@ rpl_dag_update_state(void)
     /* Update rank  */
     curr_instance.dag.rank = rpl_neighbor_rank_via_nbr(curr_instance.dag.preferred_parent);
     /* Update hop count */
-    curr_instance.dag.hop_count = curr_instance.dag.preferred_parent->hop_count + 1;
+    curr_instance.dag.hops_count = curr_instance.dag.preferred_parent->hops_count + 1;
 
     /* Update better_parent_since flag for each neighbor */
     nbr = nbr_table_head(rpl_neighbors);
@@ -392,7 +392,7 @@ update_nbr_from_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   /* Update neighbor info from DIO */
   nbr->rank = dio->rank;
   nbr->dtsn = dio->dtsn;
-  nbr->hop_count = dio->hop_count;
+  nbr->hops_count = dio->hops_count;
 #if RPL_WITH_MC
   memcpy(&nbr->mc, &dio->mc, sizeof(nbr->mc));
 #endif /* RPL_WITH_MC */
@@ -751,7 +751,7 @@ rpl_dag_init_root(uint8_t instance_id, uip_ipaddr_t *dag_id,
   curr_instance.dag.dio_intcurrent = 0;
   curr_instance.dag.state = DAG_REACHABLE;
 
-  curr_instance.dag.hop_count = 0;
+  curr_instance.dag.hops_count = 0;
 
   rpl_timers_dio_reset("Init root");
 

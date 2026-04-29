@@ -462,7 +462,7 @@ rpl_icmp6_dio_output(uip_ipaddr_t *uc_addr)
 
   buffer[pos++] = RPL_OPTION_HOPS;
   buffer[pos++] = 1;
-  buffer[pos++] = curr_instance.dag.hop_count;
+  buffer[pos++] = curr_instance.dag.hops_count;
 
   if(!rpl_get_leaf_only()) {
     addr = addr != NULL ? addr : &rpl_multicast_addr;
