@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simconf version="2023090101">
   <simulation>
-    <title>rpl-decreased-rank</title>
+    <title>rpl-decreased-rank-prevented</title>
     <speedlimit>20.0</speedlimit>
     <randomseed>321458</randomseed>
     <motedelay_us>1000000</motedelay_us>
@@ -18,7 +18,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Root Mote</description>
-      <source>[CONFIG_DIR]/../no-rank-attack/udp-root.c</source>
+      <source>[CONFIG_DIR]/../prevent-dec-rank/udp-root.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-root.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -54,7 +54,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Client Mote</description>
-      <source>[CONFIG_DIR]/../no-rank-attack/udp-client.c</source>
+      <source>[CONFIG_DIR]/../prevent-dec-rank/udp-client.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -140,7 +140,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Server Mote</description>
-      <source>[CONFIG_DIR]/../no-rank-attack/udp-server.c</source>
+      <source>[CONFIG_DIR]/../prevent-dec-rank/udp-server.c</source>
       <commands>$(MAKE) -j$(CPUS) udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -168,72 +168,6 @@
           <id>4</id>
         </interface_config>
       </mote>
-    </motetype>
-    <motetype>
-      org.contikios.cooja.contikimote.ContikiMoteType
-      <description>DIS flooder</description>
-      <source>[CONFIG_DIR]/../no-rank-attack/dis-flooder.c</source>
-      <commands>$(MAKE) -j$(CPUS) dis-flooder.cooja TARGET=cooja</commands>
-      <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiMoteID</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRS232</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiBeeper</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.IPAddress</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRadio</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiButton</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiPIR</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiClock</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiLED</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiCFS</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.Mote2MoteRelations</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.MoteAttributes</moteinterface>
-    </motetype>
-    <motetype>
-      org.contikios.cooja.contikimote.ContikiMoteType
-      <description>DODAG Version Messing mote</description>
-      <source>[CONFIG_DIR]/../no-rank-attack/dag-version-dio.c</source>
-      <commands>$(MAKE) -j$(CPUS) dag-version-dio.cooja TARGET=cooja</commands>
-      <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiMoteID</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRS232</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiBeeper</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.IPAddress</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRadio</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiButton</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiPIR</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiClock</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiLED</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiCFS</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.Mote2MoteRelations</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.MoteAttributes</moteinterface>
-    </motetype>
-    <motetype>
-      org.contikios.cooja.contikimote.ContikiMoteType
-      <description>Decreased Rank Attacker</description>
-      <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker.c</source>
-      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker.cooja TARGET=cooja</commands>
-      <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiMoteID</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRS232</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiBeeper</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.IPAddress</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRadio</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiButton</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiPIR</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiClock</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiLED</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiCFS</moteinterface>
-      <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.Mote2MoteRelations</moteinterface>
-      <moteinterface>org.contikios.cooja.interfaces.MoteAttributes</moteinterface>
     </motetype>
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
