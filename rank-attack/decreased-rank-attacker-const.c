@@ -21,24 +21,6 @@ PROCESS(blackhole_attacker, "Decreased rank attacker");
 AUTOSTART_PROCESSES(&blackhole_attacker);
 
 /*---------------------------------------------------------------------------*/
-static enum netstack_ip_action
-ip_input(void)
-{
-  return NETSTACK_IP_PROCESS;
-}
-/*---------------------------------------------------------------------------*/
-static enum netstack_ip_action
-ip_output(const linkaddr_t *localdest)
-{
-  return NETSTACK_IP_PROCESS;
-}
-/*---------------------------------------------------------------------------*/
-struct netstack_ip_packet_processor packet_processor = {
-  .process_input = ip_input,
-  .process_output = ip_output
-};
-
-/*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(blackhole_attacker, ev, data)
@@ -47,11 +29,14 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
   static uip_ipaddr_t root_ipaddr;
 
   PROCESS_BEGIN();
-
-  netstack_ip_packet_processor_add(&packet_processor);
+  LOG_INFO("Attacker will be inactive for 60 seconds.\n");
+  NETSTACK_RADIO.off();
+  etimer_set(&periodic_timer, 60 * CLOCK_SECOND);
+  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
+  NETSTACK_RADIO.on();
+  LOG_INFO("Attacker is now active.\n");
 
   while (1) {
-    
     if (NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)) {
       curr_instance.dag.rank = RPL_FORCED_RANK;
       LOG_INFO("Current node rank: %u\n", curr_instance.dag.rank);

@@ -50,9 +50,10 @@
 #include "net/link-stats.h"
 
 /* Log configuration */
+#define LOG_LEVEL LOG_LEVEL_INFO
 #include "sys/log.h"
 #define LOG_MODULE "RPL"
-#define LOG_LEVEL LOG_LEVEL_RPL
+// #define LOG_LEVEL LOG_LEVEL_RPL
 
 /* RFC6551 and RFC6719 do not mandate the use of a specific formula to
  * compute the ETX value. This MRHOF implementation relies on the value
@@ -198,8 +199,18 @@ within_hysteresis(rpl_nbr_t *nbr)
   uint16_t parent_path_cost = nbr_path_cost(curr_instance.dag.preferred_parent);
 
   int within_rank_hysteresis = path_cost + RANK_THRESHOLD > parent_path_cost;
+  if (within_rank_hysteresis) {
+    LOG_INFO("neighbor ");
+    LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr));
+    LOG_INFO_(", path cost %u, parent path cost %u, within rank hysteresis\n", path_cost, parent_path_cost);
+  }
   int within_time_hysteresis = nbr->better_parent_since == 0
     || (clock_time() - nbr->better_parent_since) <= TIME_THRESHOLD;
+  if (within_time_hysteresis) {
+    LOG_INFO("neighbor ");
+    LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr));
+    LOG_INFO_(", path cost %u, parent path cost %u, within time hysteresis\n", path_cost, parent_path_cost);
+  }
 
   /* As we want to consider neighbors that are either beyond the rank or time
   hystereses, return 1 here iff the neighbor is within both hystereses. */
@@ -216,23 +227,33 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
   nbr2_is_acceptable = nbr2 != NULL && nbr_is_acceptable_parent(nbr2);
 
   if(!nbr1_is_acceptable) {
+    LOG_INFO("neighbor ");
+    LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr1));
+    LOG_INFO_(", path cost %u, not an acceptable parent\n", nbr_path_cost(nbr1));
     return nbr2_is_acceptable ? nbr2 : NULL;
   }
   if(!nbr2_is_acceptable) {
+    LOG_INFO("neighbor ");
+    LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr2));
+    LOG_INFO_(", path cost %u, not an acceptable parent\n", nbr_path_cost(nbr2));
     return nbr1_is_acceptable ? nbr1 : NULL;
   }
 
   /* Maintain stability of the preferred parent. Switch only if the gain
   is greater than RANK_THRESHOLD, or if the neighbor has been better than the
   current parent for at more than TIME_THRESHOLD. */
-  if(nbr1 == curr_instance.dag.preferred_parent && within_hysteresis(nbr2))
-  {
+  if(nbr1 == curr_instance.dag.preferred_parent && within_hysteresis(nbr2)) {
     return nbr1;
   }
   if(nbr2 == curr_instance.dag.preferred_parent && within_hysteresis(nbr1)) {
     return nbr2;
   }
 
+  LOG_INFO("comparing neighbor ");
+  LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr1));
+  LOG_INFO_(", path cost %u, with neighbor ", nbr_path_cost(nbr1));
+  LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr2));
+  LOG_INFO_(", path cost %u\n", nbr_path_cost(nbr2));
   return nbr_path_cost(nbr1) < nbr_path_cost(nbr2) ? nbr1 : nbr2;
 }
 /*---------------------------------------------------------------------------*/
