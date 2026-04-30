@@ -85,7 +85,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-5.374520356662639" y="125.13104431164876" />
+          <pos x="-5.374520356662639" y="119.0689605881875" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -99,7 +99,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-68.95624037230927" y="115.47370960119103" />
+          <pos x="-70.55152556269381" y="107.81634068734522" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -136,6 +136,46 @@
           <id>9</id>
         </interface_config>
       </mote>
+      <mote>
+        <interface_config>
+          org.contikios.cooja.interfaces.Position
+          <pos x="-65.26383889807137" y="145.22561566386887" />
+        </interface_config>
+        <interface_config>
+          org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+          <id>10</id>
+        </interface_config>
+      </mote>
+      <mote>
+        <interface_config>
+          org.contikios.cooja.interfaces.Position
+          <pos x="-15.835435578959071" y="154.79445516643773" />
+        </interface_config>
+        <interface_config>
+          org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+          <id>11</id>
+        </interface_config>
+      </mote>
+      <mote>
+        <interface_config>
+          org.contikios.cooja.interfaces.Position
+          <pos x="6.606060866516643" y="51.602261622253884" />
+        </interface_config>
+        <interface_config>
+          org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+          <id>12</id>
+        </interface_config>
+      </mote>
+      <mote>
+        <interface_config>
+          org.contikios.cooja.interfaces.Position
+          <pos x="-36.376545360435486" y="81.84736377066221" />
+        </interface_config>
+        <interface_config>
+          org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+          <id>13</id>
+        </interface_config>
+      </mote>
     </motetype>
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
@@ -161,7 +201,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-38.39741762766717" y="112.44835505866928" />
+          <pos x="-39.23271781301701" y="113.9758715827302" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -193,7 +233,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-32.48006842649651" y="86.19749395954776" />
+          <pos x="-42.898042869086716" y="160.0076489394248" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -210,18 +250,18 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>3.874143435249513 0.0 0.0 3.874143435249513 507.1391209638004 31.315907530147673</viewport>
+      <viewport>3.1342358282626255 0.0 0.0 3.1342358282626255 569.2488758459237 129.3636137633065</viewport>
     </plugin_config>
     <bounds x="1" y="1" height="800" width="873" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>rank</filter>
+      <filter>invalid</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="877" y="160" height="240" width="843" z="3" />
+    <bounds x="270" y="160" height="240" width="1450" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -235,6 +275,10 @@
       <mote>6</mote>
       <mote>7</mote>
       <mote>8</mote>
+      <mote>9</mote>
+      <mote>10</mote>
+      <mote>11</mote>
+      <mote>12</mote>
       <showRadioRXTX />
       <showRadioHW />
       <showLEDs />
@@ -255,9 +299,9 @@
     <plugin_config>
       <split>150</split>
       <formatted_time />
-      <analyzers name="6lowpan" />
+      <analyzers name="6lowpan-pcap" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" z="2" />
+    <bounds x="875" y="398" height="402" width="844" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -269,13 +313,14 @@ moteToDisable.getInterfaces().getRadio().removed();
 log.log("Mote 8 has been disabled (OFF)\n");
 
 // Chờ 40 giây (40000ms)
-GENERATE_MSG(40000, "resume");
+GENERATE_MSG(60000, "resume");
 YIELD_THEN_WAIT_UNTIL(msg.equals("resume"));
 
 // --- KÍCH HOẠT LẠI ---
 moteToDisable.getInterfaces().getRadio().added();
 log.log("Mote 8 is activated (ON)\n");</script>
+      <active>true</active>
     </plugin_config>
-    <bounds x="744" y="68" height="700" width="600" z="1" />
+    <bounds x="674" y="-3" height="700" width="600" z="2" />
   </plugin>
 </simconf>

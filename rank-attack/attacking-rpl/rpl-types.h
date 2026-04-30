@@ -76,6 +76,7 @@
 
 /** \brief Rank of a root node. */
 #define ROOT_RANK             curr_instance.min_hoprankinc
+#define RPL_FORCED_RANK       ROOT_RANK + 32
 
 /** \brief Return DAG RANK as per RFC 6550 (rank divided by min_hoprankinc) */
 #define DAG_RANK(fixpt_rank) ((fixpt_rank) / curr_instance.min_hoprankinc)

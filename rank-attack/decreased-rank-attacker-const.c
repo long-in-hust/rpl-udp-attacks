@@ -53,7 +53,7 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
   while (1) {
     
     if (NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)) {
-      curr_instance.dag.rank = 291;
+      curr_instance.dag.rank = RPL_FORCED_RANK;
       LOG_INFO("Current node rank: %u\n", curr_instance.dag.rank);
     }
     etimer_set(&periodic_timer, 5 * CLOCK_SECOND);

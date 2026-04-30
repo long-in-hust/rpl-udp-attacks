@@ -50,9 +50,10 @@
 #include "net/link-stats.h"
 
 /* Log configuration */
-#include "sys/log.h"
 #define LOG_MODULE "RPL"
-#define LOG_LEVEL LOG_LEVEL_RPL
+// #define LOG_LEVEL LOG_LEVEL_RPL
+#define LOG_LEVEL LOG_LEVEL_INFO
+#include "sys/log.h"
 
 /* RFC6551 and RFC6719 do not mandate the use of a specific formula to
  * compute the ETX value. This MRHOF implementation relies on the value
@@ -117,6 +118,7 @@ static uint16_t
 nbr_link_metric(rpl_nbr_t *nbr)
 {
   const struct link_stats *stats = rpl_neighbor_get_link_stats(nbr);
+  LOG_INFO("link metric for neighbor with rank %u is %u\n", nbr->rank, stats != NULL ? stats->etx : 0xffff);
   return stats != NULL ? stats->etx : 0xffff;
 }
 /*---------------------------------------------------------------------------*/
@@ -201,8 +203,16 @@ within_hysteresis(rpl_nbr_t *nbr)
   uint16_t parent_path_cost = nbr_path_cost(curr_instance.dag.preferred_parent);
 
   int within_rank_hysteresis = path_cost + RANK_THRESHOLD > parent_path_cost;
+  if (within_rank_hysteresis) {
+    LOG_INFO("Neighbor with path cost %u is within rank hysteresis of current parent with path cost %u\n",
+             path_cost, parent_path_cost);
+  }
   int within_time_hysteresis = nbr->better_parent_since == 0
     || (clock_time() - nbr->better_parent_since) <= TIME_THRESHOLD;
+  if (within_time_hysteresis) {
+    LOG_INFO("Neighbor with path cost %u is within time hysteresis of current parent with path cost %u\n",
+             path_cost, parent_path_cost);
+  }
 
   /* As we want to consider neighbors that are either beyond the rank or time
   hystereses, return 1 here iff the neighbor is within both hystereses. */
@@ -227,6 +237,9 @@ static int valid_hop_count(rpl_nbr_t *nbr) {
 static rpl_nbr_t *
 best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
 {
+  LOG_INFO("best_parent function called with neighbors of ranks %u and %u\n",
+           nbr1 != NULL ? nbr1->rank : RPL_INFINITE_RANK,
+           nbr2 != NULL ? nbr2->rank : RPL_INFINITE_RANK);
   int nbr1_is_acceptable;
   int nbr2_is_acceptable;
 
@@ -234,9 +247,11 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
   nbr2_is_acceptable = nbr2 != NULL && nbr_is_acceptable_parent(nbr2);
 
   if(!nbr1_is_acceptable) {
+    LOG_INFO("Neighbor 1 is not an acceptable parent, will try Neighbor 2\n");
     return nbr2_is_acceptable ? nbr2 : NULL;
   }
   if(!nbr2_is_acceptable) {
+    LOG_INFO("Neighbor 2 is not an acceptable parent, will try Neighbor 1\n");
     return nbr1_is_acceptable ? nbr1 : NULL;
   }
 
@@ -245,26 +260,35 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
   current parent for at more than TIME_THRESHOLD. */
   if(nbr1 == curr_instance.dag.preferred_parent && within_hysteresis(nbr2))
   {
+    LOG_INFO("Neighbor 2 is in hysteresis, keeping Neighbor 1\n");
     return nbr1;
   }
-  if(nbr2 == curr_instance.dag.preferred_parent && within_hysteresis(nbr1)
-      && !valid_hop_count(nbr1) && (nbr2->hops_count <= nbr1->hops_count)) {
+  if(nbr2 == curr_instance.dag.preferred_parent && within_hysteresis(nbr1)) {
+    LOG_INFO("Neighbor 1 is in hysteresis, keeping Neighbor 2\n");
     return nbr2;
   }
 
+  clock_time_t better_parent_interval = curr_instance.dag.preferred_parent ? (clock_time() - curr_instance.dag.preferred_parent->better_parent_since) : 0;
   /* If the DAG is grounded, add a preference for parents with a 
   valid hop count that is lower than the current preferred parent. */
-  if (curr_instance.dag.grounded) {
+  LOG_INFO("Preferred parent has been preferred for %lu seconds\n", better_parent_interval / CLOCK_SECOND);
+  if (curr_instance.dag.preferred_parent && 
+      better_parent_interval > 30 * CLOCK_SECOND) {
+    LOG_INFO("Preferred parent is stablised !\n");
     if (nbr1 == curr_instance.dag.preferred_parent &&
-        !valid_hop_count(nbr2) && (nbr1->hops_count <= nbr2->hops_count)) {
+        (!valid_hop_count(nbr2) || (nbr1->hops_count <= nbr2->hops_count))) {
+      LOG_INFO("Prefer current parent over a neighbor with invalid hop count\n");
       return nbr1;
     }
     if (nbr2 == curr_instance.dag.preferred_parent &&
-        !valid_hop_count(nbr1) && (nbr2->hops_count <= nbr1->hops_count)) {
+        (!valid_hop_count(nbr1) || (nbr2->hops_count <= nbr1->hops_count))) {
+      LOG_INFO("Prefer current parent over a neighbor with invalid hop count\n");
       return nbr2;
     }
   }
 
+  LOG_INFO("Comparing two acceptable parents with path costs %u and %u\n",
+           nbr_path_cost(nbr1), nbr_path_cost(nbr2));
   return nbr_path_cost(nbr1) < nbr_path_cost(nbr2) ? nbr1 : nbr2;
 }
 /*---------------------------------------------------------------------------*/
