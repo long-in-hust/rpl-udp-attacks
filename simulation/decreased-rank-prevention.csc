@@ -172,7 +172,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Rank Decreasing attacker</description>
-      <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker.c</source>
+      <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker-const.c</source>
       <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -193,7 +193,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-30.415095837404756" y="83.87439979681955" />
+          <pos x="-32.48006842649651" y="86.19749395954776" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -221,7 +221,7 @@
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="877" y="160" height="240" width="843" z="1" />
+    <bounds x="877" y="160" height="240" width="843" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -240,7 +240,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="4" />
+    <bounds x="0" y="795" height="166" width="1720" z="5" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -248,15 +248,34 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="3" />
+    <bounds x="872" y="0" height="160" width="848" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
     <plugin_config>
       <split>150</split>
       <formatted_time />
-      <analyzers name="6lowpan-pcap" />
+      <analyzers name="6lowpan" />
     </plugin_config>
     <bounds x="875" y="398" height="402" width="844" z="2" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>moteToDisable = sim.getMoteWithID(8);
+
+// --- NGẮT KẾT NỐI ---
+moteToDisable.getInterfaces().getRadio().removed();
+log.log("Mote 8 has been disabled (OFF)\n");
+
+// Chờ 40 giây (40000ms)
+GENERATE_MSG(40000, "resume");
+YIELD_THEN_WAIT_UNTIL(msg.equals("resume"));
+
+// --- KÍCH HOẠT LẠI ---
+moteToDisable.getInterfaces().getRadio().added();
+log.log("Mote 8 is activated (ON)\n");</script>
+    </plugin_config>
+    <bounds x="744" y="68" height="700" width="600" z="1" />
   </plugin>
 </simconf>
