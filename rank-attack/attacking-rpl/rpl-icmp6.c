@@ -53,9 +53,10 @@
 #include <limits.h>
 
 /* Log configuration */
+#define LOG_LEVEL LOG_LEVEL_INFO
 #include "sys/log.h"
 #define LOG_MODULE "RPL"
-#define LOG_LEVEL LOG_LEVEL_RPL
+// #define LOG_LEVEL LOG_LEVEL_RPL
 
 /*---------------------------------------------------------------------------*/
 #define RPL_DIO_GROUNDED                 0x80
@@ -172,7 +173,6 @@ rpl_icmp6_dis_output(uip_ipaddr_t *addr)
 static void
 dio_input(void)
 {
-  int hops_count_received = 0;
   unsigned char *buffer;
   uint16_t buffer_length;
   rpl_dio_t dio;
@@ -334,17 +334,12 @@ dio_input(void)
         memcpy(&dio.prefix_info.prefix, &buffer[i + 16], 16);
         break;
       case RPL_OPTION_HOPS:
-        hops_count_received = 1;
         dio.hops_count = buffer[i + 2];
         break;
       default:
         LOG_WARN("dio_input: unsupported suboption type in DIO: %u, discard\n", (unsigned)subopt_type);
         goto discard;
     }
-  }
-
-  if (!hops_count_received) {
-    goto discard;
   }
 
   LOG_INFO("received a %s-DIO from ",

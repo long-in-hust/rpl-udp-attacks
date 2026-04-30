@@ -213,7 +213,7 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Rank Decreasing attacker</description>
       <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker-const.c</source>
-      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker.cooja TARGET=cooja</commands>
+      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker-const.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
       <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>

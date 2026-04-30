@@ -515,7 +515,6 @@ init_dag(uint8_t instance_id, uip_ipaddr_t *dag_id, rpl_ocp_t ocp,
 
   /* DAG */
   curr_instance.dag.rank = RPL_INFINITE_RANK;
-  curr_instance.dag.rank = RPL_FORCED_RANK;
   curr_instance.dag.last_advertised_rank = RPL_INFINITE_RANK;
   curr_instance.dag.lowest_rank = RPL_INFINITE_RANK;
   curr_instance.dag.dao_last_seqno = RPL_LOLLIPOP_INIT;

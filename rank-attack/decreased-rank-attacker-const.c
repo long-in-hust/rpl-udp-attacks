@@ -30,10 +30,12 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
 
   PROCESS_BEGIN();
   LOG_INFO("Attacker will be inactive for 60 seconds.\n");
+  NETSTACK_MAC.off();
   NETSTACK_RADIO.off();
   etimer_set(&periodic_timer, 60 * CLOCK_SECOND);
   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
   NETSTACK_RADIO.on();
+  NETSTACK_MAC.on();
   LOG_INFO("Attacker is now active.\n");
 
   while (1) {

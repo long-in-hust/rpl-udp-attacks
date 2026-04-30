@@ -213,7 +213,7 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Rank Decreasing attacker</description>
       <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker-const.c</source>
-      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker.cooja TARGET=cooja</commands>
+      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker-const.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
       <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>
@@ -261,7 +261,7 @@
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="270" y="160" height="240" width="1450" z="-1" minimized="true" />
+    <bounds x="1" y="160" height="240" width="1720" z="2" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -284,7 +284,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="3" />
+    <bounds x="0" y="795" height="166" width="1720" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -292,7 +292,7 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="2" />
+    <bounds x="872" y="0" height="160" width="848" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
@@ -301,6 +301,6 @@
       <formatted_time />
       <analyzers name="6lowpan-pcap" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" z="1" />
+    <bounds x="875" y="398" height="402" width="844" z="4" />
   </plugin>
 </simconf>
