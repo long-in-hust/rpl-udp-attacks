@@ -64,6 +64,10 @@
 #define RPL_DIO_MOP_MASK                 0x38
 #define RPL_DIO_PREFERENCE_MASK          0x07
 
+#ifndef RPL_WITH_HOP_COUNT
+#define RPL_WITH_HOP_COUNT               1
+#endif /* RPL_WITH_HOP_COUNT */
+
 /*---------------------------------------------------------------------------*/
 static void dis_input(void);
 static void dio_input(void);
@@ -461,9 +465,11 @@ rpl_icmp6_dio_output(uip_ipaddr_t *uc_addr)
     pos += 16;
   }
 
+  #if RPL_WITH_HOP_COUNT
   buffer[pos++] = RPL_OPTION_HOPS;
   buffer[pos++] = 1;
   buffer[pos++] = curr_instance.dag.hops_count;
+  #endif /* RPL_WITH_HOP_COUNT */
 
   if(!rpl_get_leaf_only()) {
     addr = addr != NULL ? addr : &rpl_multicast_addr;

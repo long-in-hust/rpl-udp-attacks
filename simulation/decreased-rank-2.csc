@@ -3,7 +3,7 @@
   <simulation>
     <title>rpl-decreased-rank-prevented</title>
     <speedlimit>20.0</speedlimit>
-    <randomseed>321458</randomseed>
+    <randomseed>321459</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
       org.contikios.cooja.radiomediums.UDGM
@@ -85,7 +85,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-5.374520356662639" y="119.0689605881875" />
+          <pos x="-11.117547042046995" y="117.53748680541834" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -99,7 +99,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-70.55152556269381" y="107.81634068734522" />
+          <pos x="-66.33997266007862" y="106.28486690457605" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -109,7 +109,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-62.675392253776366" y="73.49398872460343" />
+          <pos x="-79.90447230992943" y="81.15135763844924" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -119,7 +119,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="22.43186662946907" y="109.47505616779002" />
+          <pos x="18.603182172546166" y="119.81250420148186" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -169,7 +169,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-36.376545360435486" y="81.84736377066221" />
+          <pos x="-43.26817738289672" y="86.0589166732774" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -201,7 +201,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-37.637432622632474" y="105.9994456308075" />
+          <pos x="-41.083248633863086" y="111.74247231619185" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -213,7 +213,7 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>Rank Decreasing attacker</description>
       <source>[CONFIG_DIR]/../rank-attack/decreased-rank-attacker-const.c</source>
-      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker-const.cooja TARGET=cooja</commands>
+      <commands>$(MAKE) -j$(CPUS) decreased-rank-attacker-const.cooja TARGET=cooja DEFINES=RPL_WITH_HOP_COUNT=0</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
       <moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface>
@@ -233,7 +233,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-44.49332805947126" y="159.68859190134788" />
+          <pos x="-50.23635474485562" y="165.81448703242452" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -250,14 +250,14 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>3.76108299391515 0.0 0.0 3.76108299391515 579.7386510151084 -32.691663484032055</viewport>
+      <viewport>2.6118631902188545 0.0 0.0 2.6118631902188545 616.8185076493809 -20.14698853057784</viewport>
     </plugin_config>
     <bounds x="1" y="1" height="800" width="873" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:11</filter>
+      <filter>ID:8</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
@@ -284,7 +284,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="1" />
+    <bounds x="0" y="795" height="166" width="1720" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -292,7 +292,7 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="3" />
+    <bounds x="872" y="0" height="160" width="848" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
@@ -301,6 +301,6 @@
       <formatted_time />
       <analyzers name="6lowpan-pcap" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" z="4" />
+    <bounds x="875" y="398" height="402" width="844" z="1" />
   </plugin>
 </simconf>
