@@ -107,6 +107,8 @@
  * this neighbor regardless of RANK_THRESHOLD. */
 #define TIME_THRESHOLD (10 * 60 * CLOCK_SECOND)
 
+bool stabilized_parent = false;
+
 /*---------------------------------------------------------------------------*/
 static void
 reset(void)
@@ -268,12 +270,7 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
     return nbr2;
   }
 
-  clock_time_t better_parent_interval = curr_instance.dag.preferred_parent ? (clock_time() - curr_instance.dag.preferred_parent->better_parent_since) : 0;
-  /* If the DAG is grounded, add a preference for parents with a 
-  valid hop count that is lower than the current preferred parent. */
-  LOG_INFO("Preferred parent has been preferred for %lu seconds\n", better_parent_interval / CLOCK_SECOND);
-  if (curr_instance.dag.preferred_parent && 
-      better_parent_interval > 30 * CLOCK_SECOND) {
+  if (stabilized_parent) {
     LOG_INFO("Preferred parent is stablised !\n");
     if (nbr1 == curr_instance.dag.preferred_parent &&
         (!valid_hop_count(nbr2) || (nbr1->hops_count <= nbr2->hops_count))) {

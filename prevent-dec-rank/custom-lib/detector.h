@@ -3,49 +3,36 @@
 
 #include "contiki.h"
 #include "custom-lib/rpl-lite/rpl.h"
+#include "custom-lib/rpl-lite/rpl-dag.h"
 #include "net/ipv6/uip.h"
 #include "net/ipv6/uip-icmp6.h"
 #include "net/netstack.h"
 
-static const float RPL_DIS_PREVENTION_THRESHOLD = 0.5; // DIS should be less than 50% of total packets
-static int total_packets = 0;
-static int dis_packets = 0;
-
-/*---------------------------------------------------------------------------*/
-static enum netstack_ip_action
-ip_input(void)
-{
-    return NETSTACK_IP_PROCESS;
-}
-/*---------------------------------------------------------------------------*/
-static enum netstack_ip_action
-ip_output(const linkaddr_t *localdest)
-{
-    return NETSTACK_IP_PROCESS;
-}
-/*---------------------------------------------------------------------------*/
-struct netstack_ip_packet_processor packet_processor = {
-    .process_input = ip_input,
-    .process_output = ip_output};
 /*---------------------------------------------------------------------------*/
 
-PROCESS(dis_counter, "DIS Periodic Counter");
+PROCESS(network_stabilisation_checker, "DIS Periodic Counter");
 
 /*---------------------------------------------------------------------------*/
 
-PROCESS_THREAD(dis_counter, ev, data)
+PROCESS_THREAD(network_stabilisation_checker, ev, data)
 {
     static struct etimer periodic_timer;
+    clock_time_t better_parent_interval;
 
     PROCESS_BEGIN();
 
     while (1)
     {
-        etimer_set(&periodic_timer, CLOCK_SECOND * 5);
+        etimer_set(&periodic_timer, CLOCK_SECOND * 1);
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
-        total_packets = 0;
-        dis_packets = 0;
-        etimer_reset(&periodic_timer);
+        better_parent_interval = curr_instance.dag.preferred_parent ? (clock_time() - curr_instance.dag.preferred_parent->better_parent_since) : 0;
+        if (curr_instance.dag.preferred_parent && 
+            better_parent_interval > 30 * CLOCK_SECOND) {
+            /* If a preferred parent is stablised, add a preference for parents with a 
+            valid hop count that is lower than the current preferred parent. */
+            LOG_INFO("Preferred parent has been preferred for %lu seconds\n", better_parent_interval / CLOCK_SECOND);
+            stabilized_parent = true;
+        }
     }
 
     PROCESS_END();

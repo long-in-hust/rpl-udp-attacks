@@ -37,7 +37,7 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
-// #include "custom-lib/detector.h"
+#include "custom-lib/detector.h"
 
 #define WITH_SERVER_REPLY  1
 #define UDP_CLIENT_PORT	8765
@@ -46,7 +46,7 @@
 static struct simple_udp_connection udp_conn;
 
 PROCESS(udp_server_process, "UDP server");
-AUTOSTART_PROCESSES(&udp_server_process);
+AUTOSTART_PROCESSES(&udp_server_process, &network_stabilisation_checker);
 /*---------------------------------------------------------------------------*/
 static void
 udp_rx_callback(struct simple_udp_connection *c,

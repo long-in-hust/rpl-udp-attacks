@@ -59,6 +59,8 @@ extern rpl_instance_t curr_instance;
 /* The RPL multicast address (used for DIS and DIO) */
 extern uip_ipaddr_t rpl_multicast_addr;
 
+extern bool stabilized_parent;
+
 /********** More Includes **********/
 
 #include "rpl-icmp6.h"

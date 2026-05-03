@@ -36,10 +36,10 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
-// #include "custom-lib/detector.h"
+#include "custom-lib/detector.h"
 
 PROCESS(root_node_process, "Root Node");
-AUTOSTART_PROCESSES(&root_node_process);
+AUTOSTART_PROCESSES(&root_node_process, &network_stabilisation_checker);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/
