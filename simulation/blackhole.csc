@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <simconf version="2023090101">
   <simulation>
-    <title>rpl-non-root-udp</title>
+    <title>rpl-blackhole-attack</title>
     <speedlimit>2.0</speedlimit>
     <randomseed>321456</randomseed>
     <motedelay_us>1000000</motedelay_us>

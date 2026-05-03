@@ -24,7 +24,9 @@ Repo này chứa các ví dụ về tấn công RPL bằng cách sử dụng UDP
     - Với nút root, mọi yêu cầu cập nhật phiên bản không hợp lệ sẽ bị bỏ qua và đưa vào blacklist.
     - Trạng thái: Đã triển khai.
 
-- Với Rank Decrease Attack: N/A
+- Với Rank Decrease Attack: Siết tiêu chí sau khi xác định nút cha ổn định đầu tiên (được chọn làm preferred parent trong một khoảng thời gian nhất định, ví dụ 30 giây).
+    - Chỉ chấp nhận các cập nhật rank mới nếu chúng đến từ một parent có hop count (số bước nhảy) hợp lệ (thấp hơn preferred parent hiện tại) và có rank thấp hơn preferred parent hiện tại.
+    - Nếu gói tin DIO từ nút lân cận không chứa hop count, xem như gói tin không hợp lệ.
     - Trạng thái: Chưa có ý tưởng.
 
 - Với Blackhole Attack: Gửi gói tin kiểm tra, nếu không phản hồi sau một khoảng thời gian nhất định, đánh dấu nút đó là khả nghi. Tiếp tục gửi các nút xung quanh để kiểm tra, nếu các nút xung quanh trả về kết quả là nghi ngờ, đánh dấu nút đó là blackhole và bỏ qua các gói tin đến từ nó.
