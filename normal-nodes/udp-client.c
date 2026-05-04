@@ -36,6 +36,8 @@ udp_rx_callback(struct simple_udp_connection *c,
 
   LOG_INFO("Received response '%.*s' from ", datalen, (char *) data);
   LOG_INFO_6ADDR(sender_addr);
+  LOG_INFO_(" current address: ");
+  LOG_INFO_6ADDR(&uip_ds6_get_link_local(-1)->ipaddr);
 #if LLSEC802154_CONF_ENABLED
   LOG_INFO_(" LLSEC LV:%d", uipbuf_get_attr(UIPBUF_ATTR_LLSEC_LEVEL));
 #endif
@@ -79,7 +81,9 @@ PROCESS_THREAD(udp_client_process, ev, data)
       }
 
       /* Send to DAG root */
-      LOG_INFO("Sending request %"PRIu32" to ", tx_count);
+      LOG_INFO("Sending request 'hello %"PRIu32"' from ", tx_count);
+      LOG_INFO_6ADDR(&uip_ds6_get_link_local(-1)->ipaddr);
+      LOG_INFO_(" to ");
       LOG_INFO_6ADDR(&dest_ipaddr);
       LOG_INFO_("\n");
       snprintf(str, sizeof(str), "hello %" PRIu32 "", tx_count);
