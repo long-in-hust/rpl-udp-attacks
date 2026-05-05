@@ -31,7 +31,7 @@
 #include "net/routing/routing.h"
 #include "net/netstack.h"
 #include "sys/log.h"
-// #include "rpl-lite/rpl.h"
+#include "custom-lib/rpl-lite/rpl.h"
 
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO

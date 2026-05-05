@@ -438,6 +438,9 @@ process_dio_from_current_dag(uip_ipaddr_t *from, rpl_dio_t *dio)
   /* If the DIO sender is on an older version of the DAG, do not process it
    * further. The sender will eventually hear the global repair and catch up. */
   if(rpl_lollipop_greater_than(curr_instance.dag.version, dio->version)) {
+    LOG_INFO("Dropping DIO due to older DAG version from ");
+    LOG_INFO_6ADDR(from);
+    LOG_INFO_(", our version %u, recv %u\n", curr_instance.dag.version, dio->version);
     if(dio->rank == ROOT_RANK) {
       /* Before returning, if the DIO was from the root, an old DAG versions
        * likely incidates a root reboot. Reset our DIO timer to make sure the
