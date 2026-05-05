@@ -1,4 +1,4 @@
-CONTIKI_PROJECT = dis-flooder dag-version-dio non-rpl-blackhole-node dao-blackhole-node
+CONTIKI_PROJECT = dis-flooder dag-version-dio non-rpl-blackhole-node
 all: $(CONTIKI_PROJECT)
 
 CONTIKI=../../..
