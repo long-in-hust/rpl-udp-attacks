@@ -187,12 +187,16 @@ PROCESS_THREAD(verification_udp_process, ev, data)
         PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&suspect_timer) || suspected_node_is_safe);
         if (suspected_node_is_safe)
         {
-            LOG_INFO("Suspected parentnode is not a blackhole.\n");
+            LOG_INFO("Suspected parent node ");
+            LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(curr_instance.dag.preferred_parent));
+            LOG_INFO_("is not a blackhole.\n");
             etimer_reset(&suspect_timer);
         }
         else if (etimer_expired(&suspect_timer))
         {
-            LOG_INFO("No verification confirmation received within %d seconds. Confirming that the suspected node is a blackhole.\n", SUSPECT_SECONDS);
+            LOG_INFO("No verification confirmation received within %d seconds. Confirming that the suspected node ", SUSPECT_SECONDS);
+            LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(curr_instance.dag.preferred_parent));
+            LOG_INFO_(" is a blackhole.\n");
             // Blacklist the suspected node and trigger local repair
             nbr_table_remove(rpl_neighbors, curr_instance.dag.preferred_parent);
             curr_instance.dag.preferred_parent = NULL;
