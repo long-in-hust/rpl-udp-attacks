@@ -3,6 +3,7 @@ all: $(CONTIKI_PROJECT)
 
 CONTIKI=../../..
 # MODULES += net/routing/rpl-lite
+MODULES += os/services/simple-energest
 MODULES_REL += ./custom-lib ./custom-lib/rpl-lite 
 
 include $(CONTIKI)/Makefile.include

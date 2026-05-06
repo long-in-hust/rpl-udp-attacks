@@ -31,6 +31,7 @@
 #include "net/routing/routing.h"
 #include "net/netstack.h"
 #include "sys/log.h"
+#include "sys/energest.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
