@@ -3,7 +3,7 @@ all: $(CONTIKI_PROJECT)
 
 CONTIKI=../../..
 # MODULES_REL += custom-lib/rpl-lite
-MODULES += net/routing/rpl-lite
-CFLAGS += -DLOG_CONF_LEVEL_RPL=LOG_LEVEL_INFO
+MODULES += net/routing/rpl-lite # os/services/orchestra
+# MAKE_MAC = MAKE_MAC_TSCH
 
 include $(CONTIKI)/Makefile.include

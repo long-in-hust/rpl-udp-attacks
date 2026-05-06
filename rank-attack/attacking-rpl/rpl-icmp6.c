@@ -53,10 +53,9 @@
 #include <limits.h>
 
 /* Log configuration */
-#define LOG_LEVEL LOG_LEVEL_INFO
 #include "sys/log.h"
 #define LOG_MODULE "RPL"
-// #define LOG_LEVEL LOG_LEVEL_RPL
+#define LOG_LEVEL LOG_LEVEL_RPL
 
 /*---------------------------------------------------------------------------*/
 #define RPL_DIO_GROUNDED                 0x80

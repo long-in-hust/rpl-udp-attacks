@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Configuration
-file_path = '../output-artefacts/energest-csv/energy_results_rank_attack.csv'
+file_path = '../output-artefacts/energest-csv/energy_results_normal.csv'
 minute_ticks = 60000000
 selected_motes = [10, 11]
 
@@ -27,40 +27,47 @@ try:
     df['Minute'] = (pd.to_numeric(df['Time']) // minute_ticks).astype(int)
     df = df[df['Minute'] >= 1]
 
-    # Group by minute and state, averaging the values for all nodes.
-    # This reduces jitter when different minutes contain a different number of samples.
-    pivot_df = df.pivot_table(index='Minute', 
-                               columns='State', 
-                               values='Value', 
-                               aggfunc='mean').sort_index()
+    # Average each mote first so nodes with more samples do not dominate the result.
+    per_node_df = df.groupby(['Minute', 'MoteID', 'State'], as_index=False)['Value'].mean()
+
+    # Then average those node-level values for each minute/state bucket.
+    pivot_df = per_node_df.pivot_table(index='Minute', 
+                                       columns='State', 
+                                       values='Value', 
+                                       aggfunc='mean').sort_index()
 
     # Calculate 'Radio Total' if it doesn't exist (Sum of Tx and Rx)
     if 'Radio Tx' in pivot_df.columns and 'Radio Rx' in pivot_df.columns:
         pivot_df['Radio Total'] = pivot_df['Radio Tx'] + pivot_df['Radio Rx']
 
-    # --- Plotting ---
-    plt.figure(figsize=(12, 6))
-
     # Plot specific metrics relevant to RPL attacks
-    # metrics_to_plot = ['CPU', 'Radio Tx', 'Radio Rx']
-    metrics_to_plot = ['CPU']
+    metrics_to_plot = ['CPU', 'Radio Tx', 'Radio Rx']
     
     for metric in metrics_to_plot:
         if metric in pivot_df.columns:
+            plt.figure(figsize=(12, 6))
             plt.plot(pivot_df.index, pivot_df[metric], marker='o', label=metric)
 
-    plt.title('Average Network Energy Metrics (All Nodes Combined)')
-    plt.xlabel('Simulation Time (minutes)')
-    plt.ylabel('Average Ticks (Energy Consumption)')
-    plt.grid(True, linestyle='--', alpha=0.7)
-    plt.legend()
-    plt.xticks(rotation=45)
-    
-    plt.tight_layout()
-    plt.savefig('energy_plot_rank_attack.png') # Saves the graph as an image
-    plt.show()
+            plt.title('Average Network Energy Metrics (Per Node Average)')
+            plt.xlabel('Simulation Time (minutes)')
+            plt.ylabel('Average Ticks (Energy Consumption)')
+            plt.grid(True, linestyle='--', alpha=0.7)
+            plt.legend()
+            plt.xticks(rotation=45)
+            
+            plt.tight_layout()
+            if metric == 'Radio Rx':
+                name = 'radio_rx'
+            elif metric == 'Radio Tx':
+                name = 'radio_tx'
+            elif metric == 'CPU':
+                name = 'cpu'
 
-    print("Analysis Complete: Graph saved as 'energy_plot_rank_attack.png'")
+            plt.savefig(f'energy_plot_{name}_normal.png') # Saves the graph as an image
+            plt.show()
+            plt.close()
+
+            print(f"Analysis Complete: Graph saved as 'energy_plot_{name}_normal.png'")
 
 except FileNotFoundError:
     print(f"Error: {file_path} not found.")

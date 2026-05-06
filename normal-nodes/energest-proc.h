@@ -21,11 +21,6 @@ PROCESS_THREAD(energest_monitor_process, ev, data) {
     etimer_reset(&periodic_timer);
 
     energest_flush(); // Must call before reading times
-    
-    // LOG_INFO("[Energest Data:]    ");
-    // LOG_INFO_(" CPU: %lu s;", to_seconds(energest_type_time(ENERGEST_TYPE_CPU)));
-    // LOG_INFO_(" Radio TX: %lu s;", to_seconds(energest_type_time(ENERGEST_TYPE_TRANSMIT)));
-    // LOG_INFO_(" Radio RX: %lu s;", to_seconds(energest_type_time(ENERGEST_TYPE_LISTEN)));
   }
   PROCESS_END();
 }
