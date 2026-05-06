@@ -2,7 +2,6 @@ CONTIKI_PROJECT = decreased-rank-attacker decreased-rank-blackhole decreased-ran
 all: $(CONTIKI_PROJECT)
 
 CONTIKI=../../..
-MODULES += os/services/simple-energest
 MODULES_REL += ./attacking-rpl
 
 include $(CONTIKI)/Makefile.include

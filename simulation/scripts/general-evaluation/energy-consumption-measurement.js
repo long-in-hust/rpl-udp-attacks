@@ -1,37 +1,47 @@
-/*
- * Script to extract Energest data from all nodes (12-15) 
- * and save to a CSV file.
- */
+// Import Java classes for File IO
+importPackage(java.io);
 
-// Initialize the log file
-log.setFile("energy_results.csv");
-log.write("Time;MoteID;State;Value;TotalTicks;Permil\n");
+var fileName = "energy_results.csv";
+var fileWriter = new FileWriter(fileName);
+var bufferedWriter = new BufferedWriter(fileWriter);
 
-TIMEOUT(960000); // Set timeout (e.g., 60 minutes in ms)
+// Write CSV Header
+bufferedWriter.write("Time;MoteID;State;Value;TotalTicks;Permil\n");
+bufferedWriter.flush();
+
+TIMEOUT(3600000); // 60-minute timeout
 
 while (true) {
-    // Wait for a message from any mote
     YIELD();
 
     // Check if the message contains Energest info
-    if (msg.contains("INFO: Energest")) {
-        
-        // Log the raw data with mote ID and timestamp
-        // msg format: [INFO: Energest  ] State : Ticks / Total (Permil)
+    if (msg.contains("INFO: Energest") && msg.contains(":")) {
         
         var parts = msg.split(":");
+        
         if (parts.length >= 3) {
-            var stateInfo = parts[2].trim(); // e.g., "CPU  60005112/ 60005112 (1000 permil)"
-            
-            // Clean up the string for CSV
-            var cleanRow = time + ";" + id + ";" + stateInfo.replace(/\//g, ";").replace(/\(/g, ";").replace(/ permil\)/g, "");
-            
-            log.write(cleanRow + "\n");
+            var stateName = parts[1].trim(); 
+            var dataPart = parts[2].trim(); 
+
+            // Only parse lines with numerical data (containing the / separator)
+            if (dataPart.indexOf("/") !== -1) {
+                
+                var cleanData = dataPart.replace("/", ";")
+                                        .replace("(", ";")
+                                        .replace(" permil)", "");
+
+                var finalRow = time + ";" + id + ";" + stateName + ";" + cleanData;
+                
+                // Write to the file and the Cooja log console
+                bufferedWriter.write(finalRow + "\n");
+                bufferedWriter.flush(); // Ensure data is saved immediately
+                log.log("Saved: " + finalRow + "\n");
+            }
         }
     }
 
-    // Optional: Stop script if a specific condition is met
     if (msg.contains("Simulation ended")) {
-        log.testOK(); 
+        bufferedWriter.close();
+        log.testOK();
     }
 }
