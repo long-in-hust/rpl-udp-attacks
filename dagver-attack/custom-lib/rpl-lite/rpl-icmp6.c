@@ -364,14 +364,14 @@ rpl_icmp6_dio_output(uip_ipaddr_t *uc_addr)
   /* Make sure we're up-to-date before sending data out */
   rpl_dag_update_state();
 
-  if(rpl_get_leaf_only()) {
-    /* In leaf mode, we only send DIO messages as unicasts in response to
-       unicast DIS messages. */
-    if(uc_addr == NULL) {
-      /* Do not send multicast DIO in leaf mode */
-      return;
-    }
-  }
+  // if(rpl_get_leaf_only()) {
+  //   /* In leaf mode, we only send DIO messages as unicasts in response to
+  //      unicast DIS messages. */
+  //   if(uc_addr == NULL) {
+  //     /* Do not send multicast DIO in leaf mode */
+  //     return;
+  //   }
+  // }
 
   /* DAG Information Object */
   pos = 0;

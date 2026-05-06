@@ -194,7 +194,7 @@
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
       <description>DODAG Version Messing mote</description>
-      <source>[CONFIG_DIR]/../no-rank-attack/dag-version-dio.c</source>
+      <source>[CONFIG_DIR]/../dagver-attack/dag-version-dio.c</source>
       <commands>$(MAKE) -j$(CPUS) dag-version-dio.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>

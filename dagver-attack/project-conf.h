@@ -1,4 +1,4 @@
-#define ENERGEST_CONF_ON 0
+#define ENERGEST_CONF_ON 1
 // #define NETSTACK_CONF_FRAMER  framer_802154
 // #define UIP_CONF_DS6_ADDR_NBU 1
 // #define UIP_CONF_DS6_DEFRT_NBU 1
