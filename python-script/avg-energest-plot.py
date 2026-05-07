@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Configuration
-file_path = '../output-artefacts/energest-csv/energy_results_normal.csv'
+file_path = '../output-artefacts/energest-csv/energy_results_dis_attack.csv'
 minute_ticks = 60000000
 selected_motes = [10, 11]
 
@@ -41,7 +41,7 @@ try:
         pivot_df['Radio Total'] = pivot_df['Radio Tx'] + pivot_df['Radio Rx']
 
     # Plot specific metrics relevant to RPL attacks
-    metrics_to_plot = ['CPU', 'Radio Tx', 'Radio Rx']
+    metrics_to_plot = ['CPU', 'Radio Total']
     
     for metric in metrics_to_plot:
         if metric in pivot_df.columns:
@@ -56,18 +56,16 @@ try:
             plt.xticks(rotation=45)
             
             plt.tight_layout()
-            if metric == 'Radio Rx':
-                name = 'radio_rx'
-            elif metric == 'Radio Tx':
-                name = 'radio_tx'
+            if metric == 'Radio Total':
+                name = 'radio_total'
             elif metric == 'CPU':
                 name = 'cpu'
 
-            plt.savefig(f'energy_plot_{name}_normal.png') # Saves the graph as an image
+            plt.savefig(f'energy_plot_{name}_dis_attack.png') # Saves the graph as an image
             plt.show()
             plt.close()
 
-            print(f"Analysis Complete: Graph saved as 'energy_plot_{name}_normal.png'")
+            print(f"Analysis Complete: Graph saved as 'energy_plot_{name}_dis_attack.png'")
 
 except FileNotFoundError:
     print(f"Error: {file_path} not found.")

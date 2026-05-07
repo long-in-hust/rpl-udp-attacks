@@ -1,5 +1,6 @@
 // Import Java classes for File IO
-importPackage(java.io);
+var FileWriter = Java.type("java.io.FileWriter");
+var BufferedWriter = Java.type("java.io.BufferedWriter");
 
 var fileName = "energy_results.csv";
 var fileWriter = new FileWriter(fileName);
@@ -9,7 +10,7 @@ var bufferedWriter = new BufferedWriter(fileWriter);
 bufferedWriter.write("Time;MoteID;State;Value;TotalTicks;Permil\n");
 bufferedWriter.flush();
 
-TIMEOUT(3600000); // 60-minute timeout
+TIMEOUT(1800000); // 30-minute timeout
 
 while (true) {
     YIELD();

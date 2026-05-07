@@ -26,6 +26,7 @@ AUTOSTART_PROCESSES(&blackhole_attacker);
 PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   static struct etimer periodic_timer;
+  static struct etimer bootstrap_timer;
   uip_ipaddr_t root_ipaddr;
   // uip_ipaddr_t multicast_ipaddr;
 
@@ -33,9 +34,12 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
 
   PROCESS_BEGIN();
 
+  etimer_set(&bootstrap_timer, CLOCK_SECOND * 121);
+  PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&bootstrap_timer));
+
   // netstack_ip_packet_processor_add(&packet_processor);
   while (1) {
-    etimer_set(&periodic_timer, CLOCK_SECOND * 15);
+    etimer_set(&periodic_timer, CLOCK_SECOND * 5);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
     etimer_reset(&periodic_timer);
 

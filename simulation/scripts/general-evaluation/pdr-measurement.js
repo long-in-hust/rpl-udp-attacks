@@ -7,9 +7,10 @@ var warmup_done_msg_logged = false;
 
 // Time Constants (in microseconds)
 var WARMUP_PERIOD = 60 * 1000000;    // Ignore the first 60 seconds
-var END_TIME = 16 * 60 * 1000000;     // Total simulation time of 16 minutes
 var REPORT_INTERVAL = 60 * 1000000;  // Report every 60 seconds after warmup
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
+
+TIMEOUT(1800000); // 30-minute timeout
 
 log.log("Simulation started. Waiting for " + (WARMUP_PERIOD / 1000000) + "s warmup...\n");
 
@@ -62,13 +63,6 @@ while (true) {
       log.log("--------------------------------------\n");
 
       next_report += REPORT_INTERVAL;
-    }
-    if (time > END_TIME) {
-        log.log("--- FINAL 11-MINUTE MARK REACHED ---\n");
-        // This is the clean way to stop the simulation in Cooja's Scripting API
-        log.log("Stopping simulation...\n");
-        log.testOK(); // This calls the simulation stop mechanism and closes the script
-        break; // End simulation after the final report
     }
   }
 }

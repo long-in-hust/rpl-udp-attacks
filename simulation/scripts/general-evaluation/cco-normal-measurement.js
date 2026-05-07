@@ -7,18 +7,13 @@ var data_sent = 0;
 // Time Constants (in microseconds)
 var WARMUP_PERIOD = 60 * 1000000;    
 var REPORT_INTERVAL = 60 * 1000000;  
-var STOP_TIME = 16 * 60 * 1000000; // Stop after 16 mins
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 
-log.log("Monitoring Overhead & Data. Warmup: 60s. End time: 960s.\n");
+TIMEOUT(1800000); // 30-minute timeout
+
+log.log("Monitoring Overhead & Data. Warmup: 60s. End time: 1800s.\n");
 
 while (true) {
-  // Check for simulation end
-  if (time >= STOP_TIME) {
-    log.log("--- FINAL 16-MINUTE EVALUATION COMPLETE ---\n");
-    log.testOK(); 
-  }
-
   YIELD();
 
   // ONLY measure after the 60s warmup
