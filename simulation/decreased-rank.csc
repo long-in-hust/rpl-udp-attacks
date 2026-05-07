@@ -119,7 +119,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="18.603182172546166" y="119.81250420148186" />
+          <pos x="21.66612973808449" y="114.45234596178979" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -139,7 +139,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-76.74989226884009" y="153.52109865386853" />
+          <pos x="-71.77260247484031" y="140.50357150033068" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -149,7 +149,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-17.74977780742052" y="161.49465296605283" />
+          <pos x="-17.36690936172823" y="152.30581026943787" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -201,7 +201,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-41.083248633863086" y="111.74247231619185" />
+          <pos x="-25.76851080617147" y="99.87355049973083" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -233,7 +233,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-50.23635474485562" y="165.81448703242452" />
+          <pos x="-48.32201251639416" y="161.22006568411703" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -252,7 +252,7 @@
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
       <viewport>2.6118631902188545 0.0 0.0 2.6118631902188545 616.8185076493809 -20.14698853057784</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" />
+    <bounds x="1" y="1" height="800" width="873" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
@@ -261,7 +261,7 @@
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="1" y="160" height="240" width="1720" z="2" />
+    <bounds x="1" y="160" height="240" width="1720" z="10" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -284,7 +284,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="3" />
+    <bounds x="0" y="795" height="166" width="1720" z="5" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -292,7 +292,7 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="4" />
+    <bounds x="872" y="0" height="160" width="848" z="9" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
@@ -301,7 +301,7 @@
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="1" y="160" height="240" width="1720" z="4" />
+    <bounds x="1" y="160" height="240" width="1720" z="6" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -324,7 +324,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="6" />
+    <bounds x="0" y="795" height="166" width="1720" z="7" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -332,7 +332,7 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="7" />
+    <bounds x="872" y="0" height="160" width="848" z="8" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
@@ -341,7 +341,7 @@
       <formatted_time />
       <analyzers name="6lowpan" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" />
+    <bounds x="875" y="398" height="402" width="844" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -355,9 +355,10 @@ var warmup_done_msg_logged = false;
 
 // Time Constants (in microseconds)
 var WARMUP_PERIOD = 60 * 1000000;    // Ignore the first 60 seconds
-var END_TIME = 16 * 60 * 1000000;     // Total simulation time of 16 minutes
 var REPORT_INTERVAL = 60 * 1000000;  // Report every 60 seconds after warmup
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
+
+TIMEOUT(1800000); // 30-minute timeout
 
 log.log("Simulation started. Waiting for " + (WARMUP_PERIOD / 1000000) + "s warmup...\n");
 
@@ -411,23 +412,16 @@ while (true) {
 
       next_report += REPORT_INTERVAL;
     }
-    if (time &gt; END_TIME) {
-        log.log("--- FINAL 11-MINUTE MARK REACHED ---\n");
-        // This is the clean way to stop the simulation in Cooja's Scripting API
-        log.log("Stopping simulation...\n");
-        log.testOK(); // This calls the simulation stop mechanism and closes the script
-        break; // End simulation after the final report
-    }
   }
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="978" y="4" height="700" width="600" z="5" />
+    <bounds x="978" y="4" height="700" width="600" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
     <plugin_config>
-      <script>// Define Java types for modern Nashorn engine
+      <script>// Import Java classes for File IO
 var FileWriter = Java.type("java.io.FileWriter");
 var BufferedWriter = Java.type("java.io.BufferedWriter");
 
@@ -439,12 +433,12 @@ var bufferedWriter = new BufferedWriter(fileWriter);
 bufferedWriter.write("Time;MoteID;State;Value;TotalTicks;Permil\n");
 bufferedWriter.flush();
 
-TIMEOUT(3600000); // 1-hour timeout
+TIMEOUT(1800000); // 30-minute timeout
 
 while (true) {
     YIELD();
 
-    // Look for Energest INFO lines with data
+    // Check if the message contains Energest info
     if (msg.contains("INFO: Energest") &amp;&amp; msg.contains(":")) {
         
         var parts = msg.split(":");
@@ -453,25 +447,23 @@ while (true) {
             var stateName = parts[1].trim(); 
             var dataPart = parts[2].trim(); 
 
-            // Only parse if it contains the '/' separator (actual data rows)
+            // Only parse lines with numerical data (containing the / separator)
             if (dataPart.indexOf("/") !== -1) {
                 
-                // Formatting data for CSV
                 var cleanData = dataPart.replace("/", ";")
                                         .replace("(", ";")
                                         .replace(" permil)", "");
 
                 var finalRow = time + ";" + id + ";" + stateName + ";" + cleanData;
                 
-                // Output to file and Cooja log console
+                // Write to the file and the Cooja log console
                 bufferedWriter.write(finalRow + "\n");
-                bufferedWriter.flush();
-                log.log("Captured: " + stateName + " for Mote " + id);
+                bufferedWriter.flush(); // Ensure data is saved immediately
+                log.log("Saved: " + finalRow + "\n");
             }
         }
     }
 
-    // Clean up when the simulation finishes
     if (msg.contains("Simulation ended")) {
         bufferedWriter.close();
         log.testOK();
@@ -479,7 +471,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="1072" y="188" height="700" width="600" z="1" />
+    <bounds x="1072" y="188" height="700" width="600" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -493,18 +485,13 @@ var data_sent = 0;
 // Time Constants (in microseconds)
 var WARMUP_PERIOD = 60 * 1000000;    
 var REPORT_INTERVAL = 60 * 1000000;  
-var STOP_TIME = 16 * 60 * 1000000; // Stop after 16 mins
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 
-log.log("Monitoring Overhead &amp; Data. Warmup: 60s. End time: 960s.\n");
+TIMEOUT(1800000); // 30-minute timeout
+
+log.log("Monitoring Overhead &amp; Data. Warmup: 60s. End time: 1800s.\n");
 
 while (true) {
-  // Check for simulation end
-  if (time &gt;= STOP_TIME) {
-    log.log("--- FINAL 16-MINUTE EVALUATION COMPLETE ---\n");
-    log.testOK(); 
-  }
-
   YIELD();
 
   // ONLY measure after the 60s warmup

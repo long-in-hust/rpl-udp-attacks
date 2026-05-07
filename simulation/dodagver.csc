@@ -118,7 +118,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="18.603182172546166" y="119.81250420148186" />
+          <pos x="18.603182172546166" y="104.49776637379023" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -138,7 +138,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-76.74989226884009" y="153.52109865386853" />
+          <pos x="-79.04710294299383" y="145.8637297400227" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -148,7 +148,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-17.74977780742052" y="161.49465296605283" />
+          <pos x="-10.09240889357471" y="157.66596850912993" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -200,7 +200,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-41.083248633863086" y="111.74247231619185" />
+          <pos x="-35.72309039417102" y="109.4452616420381" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -249,9 +249,9 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>2.6118631902188545 0.0 0.0 2.6118631902188545 616.8185076493809 -20.14698853057784</viewport>
+      <viewport>2.6118631902188545 0.0 0.0 2.6118631902188545 509.8185076493809 91.85301146942219</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" z="1" />
+    <bounds x="1" y="1" height="800" width="873" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
@@ -260,7 +260,7 @@
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="16" y="481" height="240" width="1720" />
+    <bounds x="11" y="161" height="240" width="1720" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -375,7 +375,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="978" y="4" height="700" width="600" z="4" />
+    <bounds x="978" y="4" height="700" width="600" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -430,7 +430,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="1072" y="188" height="700" width="600" z="3" />
+    <bounds x="1072" y="188" height="700" width="600" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner

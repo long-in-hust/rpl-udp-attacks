@@ -249,9 +249,9 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>2.6118631902188545 0.0 0.0 2.6118631902188545 616.8185076493809 -20.14698853057784</viewport>
+      <viewport>3.134235828262626 0.0 0.0 3.134235828262626 600.044541921598 19.6879038033157</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" z="3" />
+    <bounds x="1" y="1" height="800" width="873" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
@@ -260,7 +260,7 @@
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="1" y="160" height="240" width="1720" z="4" />
+    <bounds x="1" y="160" height="240" width="1720" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -300,7 +300,7 @@
       <formatted_time />
       <analyzers name="6lowpan-pcap" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" z="5" />
+    <bounds x="875" y="398" height="402" width="844" z="2" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -375,7 +375,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="978" y="4" height="700" width="600" z="1" />
+    <bounds x="978" y="4" height="700" width="600" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -430,7 +430,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="1076" y="197" height="700" width="600" />
+    <bounds x="1076" y="197" height="700" width="600" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -494,6 +494,6 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="781" y="254" height="700" width="600" z="2" />
+    <bounds x="781" y="254" height="700" width="600" z="5" />
   </plugin>
 </simconf>

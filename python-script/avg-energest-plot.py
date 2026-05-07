@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Configuration
-file_path = '../output-artefacts/energest-csv/energy_results_dis_attack.csv'
+file_path = '../output-artefacts/energest-csv/energy_results_decrank_attack.csv'
 minute_ticks = 60000000
 selected_motes = [10, 11]
 
@@ -61,11 +61,11 @@ try:
             elif metric == 'CPU':
                 name = 'cpu'
 
-            plt.savefig(f'energy_plot_{name}_dis_attack.png') # Saves the graph as an image
+            plt.savefig(f'energy_plot_{name}_decrank_attack.png') # Saves the graph as an image
             plt.show()
             plt.close()
 
-            print(f"Analysis Complete: Graph saved as 'energy_plot_{name}_dis_attack.png'")
+            print(f"Analysis Complete: Graph saved as 'energy_plot_{name}_decrank_attack.png'")
 
 except FileNotFoundError:
     print(f"Error: {file_path} not found.")
