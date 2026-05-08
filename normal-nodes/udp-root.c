@@ -31,9 +31,8 @@
 #include "net/routing/routing.h"
 #include "net/netstack.h"
 #include "sys/log.h"
-#include "sys/energest.h"
-// #include "net/mac/tsch/tsch.h"
 
+#include "sys/energest.h"
 #include "energest-proc.h"
 
 #define LOG_MODULE "App"

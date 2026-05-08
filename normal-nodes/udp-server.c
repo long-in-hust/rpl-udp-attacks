@@ -32,8 +32,8 @@
 #include "net/netstack.h"
 #include "net/ipv6/simple-udp.h"
 #include "net/routing/rpl-lite/rpl.h"
-#include "sys/energest.h"
 
+#include "sys/energest.h"
 #include "energest-proc.h"
 
 #include "sys/log.h"

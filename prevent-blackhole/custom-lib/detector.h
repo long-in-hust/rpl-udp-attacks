@@ -14,6 +14,9 @@
 
 #include "packet-structs.h"
 
+#define LOG_MODULE "App"
+#define LOG_LEVEL LOG_LEVEL_INFO
+
 static bool trust_timer_reset = false;
 static bool suspected_node_is_safe = true;
 static struct simple_udp_connection verif_udp_conn;

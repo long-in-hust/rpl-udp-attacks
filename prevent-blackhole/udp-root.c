@@ -31,13 +31,19 @@
 #include "net/routing/routing.h"
 #include "net/netstack.h"
 #include "sys/log.h"
+
+// #include "custom-lib/detector.h"
+
+#include "sys/energest.h"
+#include "energest-proc.h"
+
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
 // #include "custom-lib/detector.h"
 
 PROCESS(root_node_process, "Root Node");
-AUTOSTART_PROCESSES(&root_node_process);
+AUTOSTART_PROCESSES(&root_node_process, &energest_monitor_process);
 /*---------------------------------------------------------------------------*/
 
 /*---------------------------------------------------------------------------*/

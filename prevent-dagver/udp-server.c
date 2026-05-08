@@ -35,6 +35,9 @@
 // which increases the size of the compiled code.
 // #include "net/routing/rpl-lite/rpl.h"
 
+#include "sys/energest.h"
+#include "energest-proc.h"
+
 #include "sys/log.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
@@ -48,7 +51,8 @@
 static struct simple_udp_connection udp_conn;
 
 PROCESS(udp_server_process, "UDP server");
-AUTOSTART_PROCESSES(&udp_server_process, &blacklist_resetter_process);
+AUTOSTART_PROCESSES(&udp_server_process, &blacklist_resetter_process,
+                     &energest_monitor_process);
 /*---------------------------------------------------------------------------*/
 static void
 udp_rx_callback(struct simple_udp_connection *c,
