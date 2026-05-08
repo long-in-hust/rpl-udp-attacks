@@ -276,7 +276,7 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
         (!valid_hop_count(nbr2) || (nbr1->hops_count <= nbr2->hops_count))) {
       LOG_INFO("Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:");
         if (nbr2 != NULL) {
-          LOG_INFO_6ADDR(&nbr2->ipaddr);
+          LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr2));
           LOG_INFO("\n");
         } else {
           LOG_INFO_("N/A\n");
@@ -287,7 +287,7 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
         (!valid_hop_count(nbr1) || (nbr2->hops_count <= nbr1->hops_count))) {
       LOG_INFO("Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:");
         if (nbr1 != NULL) {
-          LOG_INFO_6ADDR(&nbr1->ipaddr);
+          LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr1));
           LOG_INFO("\n");
         } else {
           LOG_INFO_("N/A\n");
