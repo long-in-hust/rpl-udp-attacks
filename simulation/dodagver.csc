@@ -384,7 +384,7 @@ while (true) {
 var FileWriter = Java.type("java.io.FileWriter");
 var BufferedWriter = Java.type("java.io.BufferedWriter");
 
-var fileName = "energy_results.csv";
+var fileName = "energy_results_dagver_attack.csv";
 var fileWriter = new FileWriter(fileName);
 var bufferedWriter = new BufferedWriter(fileWriter);
 

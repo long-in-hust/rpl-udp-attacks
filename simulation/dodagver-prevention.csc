@@ -303,4 +303,198 @@
     </plugin_config>
     <bounds x="875" y="398" height="402" width="844" z="1" />
   </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>// Initialize counters
+var client_requests_sent = 0;
+var server_requests_received = 0;
+var server_responses_sent = 0;
+var client_responses_received = 0;
+var warmup_done_msg_logged = false;
+
+// Time Constants (in microseconds)
+var WARMUP_PERIOD = 60 * 1000000;    // Ignore the first 60 seconds
+var REPORT_INTERVAL = 60 * 1000000;  // Report every 60 seconds after warmup
+var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
+
+TIMEOUT(1800000); // 30-minute timeout
+
+log.log("Simulation started. Waiting for " + (WARMUP_PERIOD / 1000000) + "s warmup...\n");
+
+while (true) {
+  YIELD();
+
+  // ONLY start counting after the warmup period
+  if (time &gt;= WARMUP_PERIOD) {
+    if (!warmup_done_msg_logged) {
+      log.log("Warmup complete. Starting PDR measurement at " + (time / 1000000).toFixed(2) + "s...\n");
+      warmup_done_msg_logged = true;
+    }
+
+    // 1. Count Client Requests Sent
+    if (msg.contains("Sending request")) {
+      client_requests_sent++;
+    }
+
+    // 2. Count Server Requests Received
+    if (msg.contains("Received request")) {
+      server_requests_received++;
+    }
+
+    // 3. Count Server Responses Sent
+    if (msg.contains("Sending response")) {
+      server_responses_sent++;
+    }
+
+    // 4. Count Client Responses Received
+    if (msg.contains("Received response")) {
+      client_responses_received++;
+    }
+
+    // Periodic Reporting
+    if (time &gt;= next_report) {
+      var upstream_pdr = (client_requests_sent &gt; 0) ? 
+          (server_requests_received / client_requests_sent) * 100 : 0;
+      
+      var downstream_pdr = (server_responses_sent &gt; 0) ? 
+          (client_responses_received / server_responses_sent) * 100 : 0;
+
+      log.log("--- PDR Report (Post-Warmup) at " + (time / 1000000).toFixed(2) + "s ---\n");
+      log.log("Upstream (Client -&gt; Server):\n");
+      log.log("  Sent: " + client_requests_sent + " | Received: " + server_requests_received + "\n");
+      log.log("  PDR: " + upstream_pdr.toFixed(2) + "%\n");
+      
+      log.log("Downstream (Server -&gt; Client):\n");
+      log.log("  Sent: " + server_responses_sent + " | Received: " + client_responses_received + "\n");
+      log.log("  PDR: " + downstream_pdr.toFixed(2) + "%\n");
+      log.log("--------------------------------------\n");
+
+      next_report += REPORT_INTERVAL;
+    }
+  }
+}</script>
+      <active>true</active>
+    </plugin_config>
+    <bounds x="978" y="4" height="700" width="600" z="4" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>// Import Java classes for File IO
+var FileWriter = Java.type("java.io.FileWriter");
+var BufferedWriter = Java.type("java.io.BufferedWriter");
+
+var fileName = "energy_results_dagver_prevention.csv";
+var fileWriter = new FileWriter(fileName);
+var bufferedWriter = new BufferedWriter(fileWriter);
+
+// Write CSV Header
+bufferedWriter.write("Time;MoteID;State;Value;TotalTicks;Permil\n");
+bufferedWriter.flush();
+
+TIMEOUT(1800000); // 30-minute timeout
+
+while (true) {
+    YIELD();
+
+    // Check if the message contains Energest info
+    if (msg.contains("INFO: Energest") &amp;&amp; msg.contains(":")) {
+        
+        var parts = msg.split(":");
+        
+        if (parts.length &gt;= 3) {
+            var stateName = parts[1].trim(); 
+            var dataPart = parts[2].trim(); 
+
+            // Only parse lines with numerical data (containing the / separator)
+            if (dataPart.indexOf("/") !== -1) {
+                
+                var cleanData = dataPart.replace("/", ";")
+                                        .replace("(", ";")
+                                        .replace(" permil)", "");
+
+                var finalRow = time + ";" + id + ";" + stateName + ";" + cleanData;
+                
+                // Write to the file and the Cooja log console
+                bufferedWriter.write(finalRow + "\n");
+                bufferedWriter.flush(); // Ensure data is saved immediately
+                log.log("Saved: " + finalRow + "\n");
+            }
+        }
+    }
+
+    if (msg.contains("Simulation ended")) {
+        bufferedWriter.close();
+        log.testOK();
+    }
+}</script>
+      <active>true</active>
+    </plugin_config>
+    <bounds x="1076" y="197" height="700" width="600" z="3" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>// Initialize counters
+var dio_count = 0;
+var dis_count = 0;
+var dao_count = 0;
+var data_sent = 0;
+
+// Time Constants (in microseconds)
+var WARMUP_PERIOD = 60 * 1000000;    
+var REPORT_INTERVAL = 60 * 1000000;  
+var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
+
+TIMEOUT(1800000); // 30-minute timeout
+
+log.log("Monitoring Overhead &amp; Data. Warmup: 60s. End time: 1800s.\n");
+
+while (true) {
+  YIELD();
+
+  // ONLY measure after the 60s warmup
+  if (time &gt;= WARMUP_PERIOD) {
+    
+    // 1. Detect Control Messages (Using your specific log strings)
+    // We count 'sending' to measure the overhead generated BY the nodes
+    if (msg.contains("sending") &amp;&amp; msg.contains("-DIO")) {
+      dio_count++;
+    } else if (msg.contains("sending a DIS")) {
+      dis_count++;
+    } else if (msg.contains("sending a DAO")) {
+      dao_count++;
+    }
+
+    // 2. Detect Data Traffic (To calculate Overhead Ratio)
+    if (msg.contains("Sending request")) {
+      data_sent++;
+    }
+
+    // 3. Periodic Reporting (Every 60 seconds)
+    if (time &gt;= next_report) {
+      var total_control = dio_count + dis_count + dao_count;
+      var overhead_ratio = (data_sent &gt; 0) ? (total_control / data_sent) : total_control;
+
+      log.log("--- Report at " + (time / 1000000).toFixed(0) + "s ---\n");
+      log.log("Control Messages (Sent):\n");
+      log.log("  DIO: " + dio_count + " | DIS: " + dis_count + " | DAO: " + dao_count + "\n");
+      log.log("  Total Overhead: " + total_control + " packets\n");
+      log.log("  Data Sent: " + data_sent + " packets\n");
+      
+      // If data_sent is 0, we report total control as the absolute overhead
+      if (data_sent &gt; 0) {
+        log.log("  Overhead Ratio: " + overhead_ratio.toFixed(2) + " control/data\n");
+      }
+      log.log("--------------------------------------\n");
+
+      next_report += REPORT_INTERVAL;
+    }
+  }
+}</script>
+      <active>true</active>
+    </plugin_config>
+    <bounds x="781" y="254" height="700" width="600" z="5" />
+  </plugin>
 </simconf>
