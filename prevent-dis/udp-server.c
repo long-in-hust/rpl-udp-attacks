@@ -37,6 +37,8 @@
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
+#include "energest-proc.h"
+
 #include "custom-lib/detector.h"
 
 #define WITH_SERVER_REPLY  1
@@ -46,7 +48,7 @@
 static struct simple_udp_connection udp_conn;
 
 PROCESS(udp_server_process, "UDP server");
-AUTOSTART_PROCESSES(&udp_server_process, &dis_counter);
+AUTOSTART_PROCESSES(&udp_server_process, &dis_counter, &energest_monitor_process);
 /*---------------------------------------------------------------------------*/
 static void
 udp_rx_callback(struct simple_udp_connection *c,

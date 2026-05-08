@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <inttypes.h>
 
+#include "energest-proc.h"
+
 #include "sys/log.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
@@ -24,7 +26,8 @@ static uint32_t rx_count = 0;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(udp_client_process, "UDP client");
-AUTOSTART_PROCESSES(&udp_client_process);
+AUTOSTART_PROCESSES(&udp_client_process, &dis_counter,
+                     &energest_monitor_process);
 /*---------------------------------------------------------------------------*/
 static void
 udp_rx_callback(struct simple_udp_connection *c,
