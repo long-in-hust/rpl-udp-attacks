@@ -16,11 +16,11 @@ Downstream (Server -> Client):
 
 ============= Dis Flooding Prevented ===============
 Upstream (Client -> Server):
-  Sent: 3243 | Received: 3238
-  PDR: 99.85%
+  Sent: 3245 | Received: 3227
+  PDR: 99.45%
 Downstream (Server -> Client):
-  Sent: 3238 | Received: 3236
-  PDR: 99.94%
+  Sent: 3227 | Received: 3211
+  PDR: 99.50%
 
 ============= DAG Version Attack ===============
 Upstream (Client -> Server):

@@ -14,10 +14,10 @@ Control Messages (Sent):
 
 ============= Dis Flooding Prevented ===============
 Control Messages (Sent):
-  DIO: 0 | DIS: 160794 | DAO: 0
-  Total Overhead: 160794 packets
-  Data Sent: 3243 packets
-  Overhead Ratio: 49.58 control/data
+  DIO: 151 | DIS: 160789 | DAO: 10
+  Total Overhead: 160950 packets
+  Data Sent: 3245 packets
+  Overhead Ratio: 49.60 control/data
 
 ============= DAG Version Attack ===============
 Control Messages (Sent):
