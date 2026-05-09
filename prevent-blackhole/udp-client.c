@@ -8,13 +8,12 @@
 #include <inttypes.h>
 
 #include "sys/energest.h"
-#include "energest-proc.h"
+// #include "energest-proc.h"
+#include "custom-lib/detector.h"
 
 #include "sys/log.h"
 #define LOG_MODULE "App"
 #define LOG_LEVEL LOG_LEVEL_INFO
-
-#include "custom-lib/detector.h"
 
 #define WITH_SERVER_REPLY  1
 #define UDP_CLIENT_PORT	8765
@@ -27,7 +26,7 @@ static uint32_t rx_count = 0;
 
 /*---------------------------------------------------------------------------*/
 PROCESS(udp_client_process, "UDP client");
-AUTOSTART_PROCESSES(&udp_client_process, &energest_monitor_process,
+AUTOSTART_PROCESSES(&udp_client_process,
                     &detector_process, &verification_udp_process);
 /*---------------------------------------------------------------------------*/
 static void
@@ -72,6 +71,9 @@ PROCESS_THREAD(udp_client_process, ev, data)
   while(1) {
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
 
+    LOG_INFO("[Main] Checking reachability: node_is_reachable=%d, preferred_parent=%s\n", 
+                 NETSTACK_ROUTING.node_is_reachable(), 
+                 curr_instance.dag.preferred_parent ? "set" : "NULL");
     if(NETSTACK_ROUTING.node_is_reachable()
        && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)) {
       
@@ -85,7 +87,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
       }
 
       /* Send to DAG root */
-      LOG_INFO("Sending request %"PRIu32" to ", tx_count);
+      LOG_INFO("Sending request 'hello %"PRIu32"' to ", tx_count);
       LOG_INFO_6ADDR(&dest_ipaddr);
       LOG_INFO_("\n");
       snprintf(str, sizeof(str), "hello %" PRIu32 "", tx_count);

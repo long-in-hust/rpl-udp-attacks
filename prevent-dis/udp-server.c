@@ -75,6 +75,7 @@ PROCESS_THREAD(udp_server_process, ev, data)
   static struct etimer periodic_timer;
   
   PROCESS_BEGIN();
+  netstack_ip_packet_processor_add(&packet_processor);
   
   /* Initialize UDP connection */
   LOG_INFO("UDP has server started.");

@@ -62,6 +62,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
 
   PROCESS_BEGIN();
+  netstack_ip_packet_processor_add(&packet_processor);
 
   /* Initialize UDP connection */
   simple_udp_register(&udp_conn, UDP_CLIENT_PORT, NULL,

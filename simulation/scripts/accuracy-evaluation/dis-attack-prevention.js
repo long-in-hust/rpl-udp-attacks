@@ -5,6 +5,9 @@ var totalDropped = 0;
 var totalDisSeen = 0;
 var attackerDisSeen = 0;
 var benignDisSeen = 0;
+var END_TIME = 1790 * 1000000; // ms
+
+TIMEOUT(1800000); // 30-minute timeout
 
 while (true) {
   YIELD();

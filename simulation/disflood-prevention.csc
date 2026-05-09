@@ -2,7 +2,6 @@
 <simconf version="2023090101">
   <simulation>
     <title>rpl-dis-flooding-prevented</title>
-    <speedlimit>20.0</speedlimit>
     <randomseed>321459</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
@@ -252,16 +251,16 @@
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
       <viewport>3.76108299391515 0.0 0.0 3.76108299391515 578.7519843484416 -36.59833015069874</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" />
+    <bounds x="1" y="1" height="800" width="873" z="6" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:8</filter>
+      <filter>DIS</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="1" y="160" height="240" width="1720" z="2" />
+    <bounds x="1" y="160" height="240" width="1720" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -284,7 +283,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="3" />
+    <bounds x="0" y="795" height="166" width="1720" z="8" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -292,7 +291,7 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="4" />
+    <bounds x="872" y="0" height="160" width="848" z="7" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
@@ -301,7 +300,7 @@
       <formatted_time />
       <analyzers name="6lowpan-pcap" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" z="1" />
+    <bounds x="875" y="398" height="402" width="844" z="2" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -376,7 +375,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="978" y="4" height="700" width="600" z="4" />
+    <bounds x="183" y="221" height="700" width="600" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -436,7 +435,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="1076" y="197" height="700" width="600" z="3" />
+    <bounds x="1075" y="50" height="700" width="600" z="5" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -500,6 +499,73 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="781" y="254" height="700" width="600" z="5" />
+    <bounds x="781" y="254" height="700" width="600" z="1" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>var ATTACKER = "::208:8:8:8";
+var tp = 0;
+var fp = 0;
+var totalDropped = 0;
+var totalDisSeen = 0;
+var attackerDisSeen = 0;
+var benignDisSeen = 0;
+var END_TIME = 1790 * 1000000; // ms
+
+TIMEOUT(1800000); // 30-minute timeout
+
+while (true) {
+  YIELD();
+
+  var isDisLine = msg.contains("Dropping DIS packet.") ||
+                  msg.contains("Accepting DIS packet.");
+  if (!isDisLine) {
+    continue;
+  }
+
+  var isAttacker = msg.contains(ATTACKER);
+  var isDrop = msg.contains("Dropping DIS packet.");
+
+  totalDisSeen++;
+  if (isAttacker) {
+    attackerDisSeen++;
+  } else {
+    benignDisSeen++;
+  }
+
+  if (isDrop) {
+    totalDropped++;
+    if (isAttacker) {
+      tp++;
+    } else {
+      fp++;
+    }
+  }
+
+  if (time &gt;= END_TIME) {
+    var dropBasedTpRate = totalDropped &gt; 0 ? (100.0 * tp / totalDropped) : 0;
+    var dropBasedFpRate = totalDropped &gt; 0 ? (100.0 * fp / totalDropped) : 0;
+    var obsBasedTpRate = totalDisSeen &gt; 0 ? (100.0 * tp / totalDisSeen) : 0;
+    var obsBasedFpRate = totalDisSeen &gt; 0 ? (100.0 * fp / totalDisSeen) : 0;
+
+    log.log("DIS summary\n");
+    log.log("  total DIS seen: " + totalDisSeen + "\n");
+    log.log("  attacker DIS seen: " + attackerDisSeen + "\n");
+    log.log("  benign DIS seen: " + benignDisSeen + "\n");
+    log.log("  dropped DIS total: " + totalDropped + "\n");
+    log.log("  true positives: " + tp + "\n");
+    log.log("  false positives: " + fp + "\n");
+    log.log("  TP/total-dropped: " + dropBasedTpRate.toFixed(2) + "%\n");
+    log.log("  FP/total-dropped: " + dropBasedFpRate.toFixed(2) + "%\n");
+    log.log("  TP/total-seen: " + obsBasedTpRate.toFixed(2) + "%\n");
+    log.log("  FP/total-seen: " + obsBasedFpRate.toFixed(2) + "%\n");
+    log.testOK();
+    break;
+  }
+}</script>
+      <active>true</active>
+    </plugin_config>
+    <bounds x="952" y="159" height="700" width="600" />
   </plugin>
 </simconf>

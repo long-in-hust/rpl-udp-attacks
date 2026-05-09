@@ -1,0 +1,55 @@
+============= Normal ===============
+Control Messages (Sent):
+  DIO: 166 | DIS: 0 | DAO: 16
+  Total Overhead: 182 packets
+  Data Sent: 3569 packets
+  Overhead Ratio: 0.05 control/data
+
+============= DIS Flooding Attack ===============
+Control Messages (Sent):
+  DIO: 944 | DIS: 160783 | DAO: 6
+  Total Overhead: 161733 packets
+  Data Sent: 3253 packets
+  Overhead Ratio: 49.72 control/data
+
+============= Dis Flooding Prevented ===============
+Control Messages (Sent):
+  DIO: 0 | DIS: 160794 | DAO: 0
+  Total Overhead: 160794 packets
+  Data Sent: 3243 packets
+  Overhead Ratio: 49.58 control/data
+
+============= DAG Version Attack ===============
+Control Messages (Sent):
+  DIO: 510 | DIS: 154 | DAO: 41
+  Total Overhead: 705 packets
+  Data Sent: 2619 packets
+  Overhead Ratio: 0.27 control/data
+
+============= DAG Version Attack Prevented ===============
+
+============= Decreased Rank Attack ===============
+Control Messages (Sent):
+  DIO: 18795 | DIS: 22 | DAO: 226
+  Total Overhead: 19043 packets
+  Data Sent: 2964 packets
+  Overhead Ratio: 6.42 control/data
+
+============= Decreased Rank Attack Prevented ===============
+
+============= Blackhole No Attack ===============
+Control Messages (Sent):
+  DIO: 125 | DIS: 11 | DAO: 12
+  Total Overhead: 148 packets
+  Data Sent: 1888 packets
+  Overhead Ratio: 0.08 control/data
+
+============= Blackhole Attack ===============
+Control Messages (Sent):
+  DIO: 307 | DIS: 40 | DAO: 478
+  Total Overhead: 825 packets
+  Data Sent: 1495 packets
+  Overhead Ratio: 0.55 control/data
+
+============= Blackhole Attack Prevented ===============
+

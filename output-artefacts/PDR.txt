@@ -1,0 +1,69 @@
+============= Normal ===============
+Upstream (Client -> Server):
+  Sent: 3569 | Received: 3552
+  PDR: 99.52%
+Downstream (Server -> Client):
+  Sent: 3552 | Received: 3537
+  PDR: 99.58%
+
+============= DIS Flooding Attack ===============
+Upstream (Client -> Server):
+  Sent: 3253 | Received: 3247
+  PDR: 99.82%
+Downstream (Server -> Client):
+  Sent: 3247 | Received: 3227
+  PDR: 99.38%
+
+============= Dis Flooding Prevented ===============
+Upstream (Client -> Server):
+  Sent: 3243 | Received: 3238
+  PDR: 99.85%
+Downstream (Server -> Client):
+  Sent: 3238 | Received: 3236
+  PDR: 99.94%
+
+============= DAG Version Attack ===============
+Upstream (Client -> Server):
+  Sent: 2619 | Received: 2618
+  PDR: 99.96%
+Downstream (Server -> Client):
+  Sent: 2618 | Received: 2611
+  PDR: 99.73%
+
+============= DAG Version Attack Prevented ===============
+
+
+============= Decreased Rank Attack ===============
+Upstream (Client -> Server):
+  Sent: 2964 | Received: 2676
+  PDR: 90.28%
+Downstream (Server -> Client):
+  Sent: 2676 | Received: 2667
+  PDR: 99.66%
+
+============= Decreased Rank Attack Prevented ===============
+
+============= Blackhole No Attack ===============
+Upstream (Client -> Server):
+  Sent: 1888 | Received: 1887
+  PDR: 99.95%
+Downstream (Server -> Client):
+  Sent: 1887 | Received: 1887
+  PDR: 100.00%
+
+============= Blackhole Attack ===============
+Upstream (Client -> Server):
+  Sent: 1495 | Received: 0
+  PDR: 0.00%
+Downstream (Server -> Client):
+  Sent: 0 | Received: 0
+  PDR: 0.00%
+
+============= Blackhole Attack Prevented ===============
+
+Upstream (Client -> Server):
+  Sent: 1486 | Received: 1440
+  PDR: 96.90%
+Downstream (Server -> Client):
+  Sent: 1440 | Received: 1439
+  PDR: 99.93%

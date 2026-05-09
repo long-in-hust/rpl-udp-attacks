@@ -25,31 +25,11 @@ ip_input(void)
 {
   uip_ipaddr_t root_ipaddr;
   uint8_t proto = 0;
-  uint8_t icmp6_type = 0;
   uipbuf_get_last_header(uip_buf, uip_len, &proto);
-  if (proto == UIP_PROTO_ICMP6) {
-    switch (UIP_IP_BUF->proto) {
-      case UIP_PROTO_ICMP6:
-        icmp6_type = uip_buf[UIP_IPH_LEN];
-        break;
-      case UIP_PROTO_HBHO:
-        icmp6_type = uip_buf[UIP_IPH_LEN + 8];
-        break;
-      case UIP_PROTO_ROUTING:
-        icmp6_type = uip_buf[UIP_IPH_LEN + 16];
-        break;
-      default:
-        break;
-    }
-    LOG_INFO("Incoming packet proto: %d, ICMP6 type: %d\n", proto, icmp6_type);
-  }
-  else {
-    LOG_INFO("Incoming packet proto: %d\n", proto);
-  }
   if(NETSTACK_ROUTING.node_is_reachable()
        && NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr))
   {
-    if (proto != UIP_PROTO_ICMP6 || icmp6_type != ICMP6_RPL) {
+    if (proto != UIP_PROTO_ICMP6) {
       LOG_INFO("Dropping packet !\n");
       return NETSTACK_IP_DROP;
     }

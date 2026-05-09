@@ -2,7 +2,7 @@
 <simconf version="2023090101">
   <simulation>
     <title>rpl-blackhole-prevented</title>
-    <speedlimit>2.0</speedlimit>
+    <speedlimit>20.0</speedlimit>
     <randomseed>321456</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
@@ -109,7 +109,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="29.59979123329727" y="-28.159368096806507" />
+          <pos x="34.23212049173199" y="-18.508682141734184" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -200,18 +200,18 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>2.590489434262463 0.0 0.0 2.590489434262463 385.0333256650876 160.52328514869095</viewport>
+      <viewport>2.590489434262463 0.0 0.0 2.590489434262463 325.0333256650876 498.52328514869095</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" />
+    <bounds x="1" y="1" height="800" width="872" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:8</filter>
+      <filter>is a blackhole</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="877" y="160" height="240" width="843" z="1" />
+    <bounds x="58" y="160" height="240" width="1662" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -229,7 +229,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="3" />
+    <bounds x="0" y="795" height="166" width="1720" z="8" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -237,14 +237,14 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="4" />
+    <bounds x="872" y="0" height="160" width="848" z="7" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
     <plugin_config>
       <split>150</split>
       <formatted_time />
-      <analyzers name="6lowpan-pcap" />
+      <analyzers name="6lowpan" />
     </plugin_config>
     <bounds x="875" y="398" height="402" width="844" z="2" />
   </plugin>
@@ -381,7 +381,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="1076" y="197" height="700" width="600" z="3" />
+    <bounds x="263" y="203" height="700" width="600" z="6" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -446,5 +446,89 @@ while (true) {
       <active>true</active>
     </plugin_config>
     <bounds x="781" y="254" height="700" width="600" z="5" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>// blacklist-measurement.js
+// Counts blacklists, true positives (parent == fd00::208:8:8:8), false positives, and reports rates.
+
+var BLACKLIST_COUNT = 0;
+var TP_COUNT = 0;
+var FP_COUNT = 0;
+
+var TARGET_ADDR = "fd00::208:8:8:8";
+
+var WARMUP_PERIOD = 120 * 1000000;    // ignore first 60s
+var REPORT_INTERVAL = 60 * 1000000;  // report every 60s after warmup
+var STOP_TIME = 30 * 60 * 1000000;   // stop after 11 minutes
+var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
+
+TIMEOUT(1800000); // 30-minute timeout
+
+log.log("Blacklist measurement script started. Warmup: 60s. Target: " + TARGET_ADDR + "\n");
+
+while (true) {
+  YIELD();
+
+  // Only measure after warmup
+  if (time &gt;= WARMUP_PERIOD) {
+
+    // Detect blacklist confirmation log lines that include the address and "is a blackhole"
+    if (msg.contains("is a blackhole")) {
+      // Try to extract the IPv6 address immediately before "is a blackhole"
+      var m = msg.match(/([0-9a-f:]+)\s+is\s+a\s+blackhole/i);
+      if (m &amp;&amp; m[1]) {
+        var addr = m[1].toLowerCase();
+        BLACKLIST_COUNT++;
+        if (addr === TARGET_ADDR) {
+          TP_COUNT++;
+          log.log("[BLACKLIST] True Positive: " + addr + " (total: " + BLACKLIST_COUNT + ")\n");
+        } else {
+          FP_COUNT++;
+          log.log("[BLACKLIST] False Positive: " + addr + " (total: " + BLACKLIST_COUNT + ")\n");
+        }
+      } else {
+        // Fallback: count as blacklist but unknown addr
+        BLACKLIST_COUNT++;
+        FP_COUNT++;
+        log.log("[BLACKLIST] Unknown addr (counted as FP). Total: " + BLACKLIST_COUNT + "\n");
+      }
+    }
+
+    // Periodic reporting
+    if (time &gt;= next_report) {
+      var tp_rate = (BLACKLIST_COUNT &gt; 0) ? (TP_COUNT / BLACKLIST_COUNT) : 0;
+      var fp_rate = (BLACKLIST_COUNT &gt; 0) ? (FP_COUNT / BLACKLIST_COUNT) : 0;
+
+      log.log("--- Blacklist Report at " + (time / 1000000).toFixed(0) + "s ---\n");
+      log.log("  Blacklists: " + BLACKLIST_COUNT + "\n");
+      log.log("  True Positives: " + TP_COUNT + "\n");
+      log.log("  False Positives: " + FP_COUNT + "\n");
+      log.log("  TP/Total: " + tp_rate.toFixed(3) + " | FP/Total: " + fp_rate.toFixed(3) + "\n");
+      log.log("-------------------------------------------\n");
+
+      next_report += REPORT_INTERVAL;
+    }
+
+    // Final stop and report
+    if (time &gt;= STOP_TIME) {
+      var tp_rate = (BLACKLIST_COUNT &gt; 0) ? (TP_COUNT / BLACKLIST_COUNT) : 0;
+      var fp_rate = (BLACKLIST_COUNT &gt; 0) ? (FP_COUNT / BLACKLIST_COUNT) : 0;
+
+      log.log("=== FINAL BLACKLIST METRICS ===\n");
+      log.log("Blacklists: " + BLACKLIST_COUNT + "\n");
+      log.log("True Positives: " + TP_COUNT + "\n");
+      log.log("False Positives: " + FP_COUNT + "\n");
+      log.log("TP/Total: " + tp_rate.toFixed(3) + "\n");
+      log.log("FP/Total: " + fp_rate.toFixed(3) + "\n");
+      log.testOK();
+      break;
+    }
+  }
+}</script>
+      <active>true</active>
+    </plugin_config>
+    <bounds x="1018" y="140" height="700" width="600" z="3" />
   </plugin>
 </simconf>

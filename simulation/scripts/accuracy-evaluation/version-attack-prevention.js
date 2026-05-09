@@ -11,8 +11,10 @@ var FP = 0;
 
 var WARMUP_PERIOD = 120 * 1000000;    // ignore first 60s
 var REPORT_INTERVAL = 60 * 1000000;  // report every 60s after warmup
-var STOP_TIME = 11 * 60 * 1000000;   // stop after 11 minutes
+var STOP_TIME = 30 * 60 * 1000000;   // stop after 11 minutes
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
+
+TIMEOUT(1800000); // 30-minute timeout
 
 log.log("Version-drop measurement script started. Warmup: 60s. Target: " + TARGET_ADDR + "\n");
 

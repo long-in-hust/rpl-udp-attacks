@@ -34,7 +34,7 @@
 #include "net/routing/rpl-lite/rpl.h"
 
 #include "sys/energest.h"
-#include "energest-proc.h"
+// #include "energest-proc.h"
 
 #include "sys/log.h"
 #define LOG_MODULE "App"
@@ -49,7 +49,7 @@
 static struct simple_udp_connection udp_conn;
 
 PROCESS(udp_server_process, "UDP server");
-AUTOSTART_PROCESSES(&udp_server_process, &energest_monitor_process,
+AUTOSTART_PROCESSES(&udp_server_process,
                     &detector_process, &verification_udp_process);
 /*---------------------------------------------------------------------------*/
 static void

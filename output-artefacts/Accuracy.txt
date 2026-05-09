@@ -1,0 +1,22 @@
+============= Dis Flooding Prevented ===============
+ total DIS seen: 150593
+  attacker DIS seen: 150558
+  benign DIS seen: 35
+  dropped DIS total: 150589
+  true positives: 150557
+  false positives: 32
+  TP/total-dropped: 99.98%
+  FP/total-dropped: 0.02%
+  TP/total-seen: 99.98%
+  FP/total-seen: 0.02%
+
+============= DAG Version Attack Prevented ===============
+
+
+============= Decreased Rank Attack Prevented ===============
+
+
+============= Blackhole Attack Prevented ===============
+TP: 100%
+FP: 0%
+FN: 0%

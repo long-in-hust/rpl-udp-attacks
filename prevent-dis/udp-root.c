@@ -49,6 +49,7 @@ PROCESS_THREAD(root_node_process, ev, data)
 
   /* Initialize DAG root */
   NETSTACK_ROUTING.root_start();
+  netstack_ip_packet_processor_add(&packet_processor);
 
   while (1)
   {
