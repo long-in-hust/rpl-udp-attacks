@@ -7,7 +7,7 @@ var FP_COUNT = 0;
 
 var TARGET_ADDR = "fd00::208:8:8:8";
 
-var WARMUP_PERIOD = 60 * 1000000;    // ignore first 60s
+var WARMUP_PERIOD = 120 * 1000000;    // ignore first 60s
 var REPORT_INTERVAL = 60 * 1000000;  // report every 60s after warmup
 var STOP_TIME = 11 * 60 * 1000000;   // stop after 11 minutes
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;

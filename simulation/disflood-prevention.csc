@@ -314,7 +314,7 @@ var client_responses_received = 0;
 var warmup_done_msg_logged = false;
 
 // Time Constants (in microseconds)
-var WARMUP_PERIOD = 60 * 1000000;    // Ignore the first 60 seconds
+var WARMUP_PERIOD = 120 * 1000000;    // Ignore the first 60 seconds
 var REPORT_INTERVAL = 60 * 1000000;  // Report every 60 seconds after warmup
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 
@@ -393,40 +393,45 @@ var bufferedWriter = new BufferedWriter(fileWriter);
 bufferedWriter.write("Time;MoteID;State;Value;TotalTicks;Permil\n");
 bufferedWriter.flush();
 
+var WARMUP_PERIOD = 120 * 1000000; // 120-second warmup to let the network stabilize
+
 TIMEOUT(1800000); // 30-minute timeout
 
 while (true) {
     YIELD();
 
-    // Check if the message contains Energest info
-    if (msg.contains("INFO: Energest") &amp;&amp; msg.contains(":")) {
-        
-        var parts = msg.split(":");
-        
-        if (parts.length &gt;= 3) {
-            var stateName = parts[1].trim(); 
-            var dataPart = parts[2].trim(); 
+    if (time &gt;= WARMUP_PERIOD) {
 
-            // Only parse lines with numerical data (containing the / separator)
-            if (dataPart.indexOf("/") !== -1) {
-                
-                var cleanData = dataPart.replace("/", ";")
-                                        .replace("(", ";")
-                                        .replace(" permil)", "");
+      // Check if the message contains Energest info
+      if (msg.contains("INFO: Energest") &amp;&amp; msg.contains(":")) {
+          
+          var parts = msg.split(":");
+          
+          if (parts.length &gt;= 3) {
+              var stateName = parts[1].trim(); 
+              var dataPart = parts[2].trim(); 
 
-                var finalRow = time + ";" + id + ";" + stateName + ";" + cleanData;
-                
-                // Write to the file and the Cooja log console
-                bufferedWriter.write(finalRow + "\n");
-                bufferedWriter.flush(); // Ensure data is saved immediately
-                log.log("Saved: " + finalRow + "\n");
-            }
-        }
-    }
+              // Only parse lines with numerical data (containing the / separator)
+              if (dataPart.indexOf("/") !== -1) {
+                  
+                  var cleanData = dataPart.replace("/", ";")
+                                          .replace("(", ";")
+                                          .replace(" permil)", "");
 
-    if (msg.contains("Simulation ended")) {
-        bufferedWriter.close();
-        log.testOK();
+                  var finalRow = time + ";" + id + ";" + stateName + ";" + cleanData;
+                  
+                  // Write to the file and the Cooja log console
+                  bufferedWriter.write(finalRow + "\n");
+                  bufferedWriter.flush(); // Ensure data is saved immediately
+                  log.log("Saved: " + finalRow + "\n");
+              }
+          }
+      }
+
+      if (msg.contains("Simulation ended")) {
+          bufferedWriter.close();
+          log.testOK();
+      }
     }
 }</script>
       <active>true</active>
@@ -443,7 +448,7 @@ var dao_count = 0;
 var data_sent = 0;
 
 // Time Constants (in microseconds)
-var WARMUP_PERIOD = 60 * 1000000;    
+var WARMUP_PERIOD = 120 * 1000000;    
 var REPORT_INTERVAL = 60 * 1000000;  
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 

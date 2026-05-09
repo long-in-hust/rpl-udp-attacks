@@ -292,7 +292,7 @@ var client_responses_received = 0;
 var warmup_done_msg_logged = false;
 
 // Time Constants (in microseconds)
-var WARMUP_PERIOD = 60 * 1000000;    // Ignore the first 60 seconds
+var WARMUP_PERIOD = 120 * 1000000;    // Ignore the first 60 seconds
 var REPORT_INTERVAL = 60 * 1000000;  // Report every 60 seconds after warmup
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 
@@ -371,10 +371,13 @@ var bufferedWriter = new BufferedWriter(fileWriter);
 bufferedWriter.write("Time;MoteID;State;Value;TotalTicks;Permil\n");
 bufferedWriter.flush();
 
+var WARMUP_PERIOD = 120 * 1000000; // 120-second warmup to let the network stabilize
+
 TIMEOUT(1800000); // 30-minute timeout
 
 while (true) {
-    YIELD();
+  YIELD();
+  if (time &gt;= WARMUP_PERIOD) {
 
     // Check if the message contains Energest info
     if (msg.contains("INFO: Energest") &amp;&amp; msg.contains(":")) {
@@ -406,6 +409,7 @@ while (true) {
         bufferedWriter.close();
         log.testOK();
     }
+  }
 }</script>
       <active>true</active>
     </plugin_config>
@@ -421,18 +425,18 @@ var dao_count = 0;
 var data_sent = 0;
 
 // Time Constants (in microseconds)
-var WARMUP_PERIOD = 60 * 1000000;    
+var WARMUP_PERIOD = 120 * 1000000;    
 var REPORT_INTERVAL = 60 * 1000000;  
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 
 TIMEOUT(1800000); // 30-minute timeout
 
-log.log("Monitoring Overhead &amp; Data. Warmup: 60s. End time: 1800s.\n");
+log.log("Monitoring Overhead &amp; Data. Warmup: 120s. End time: 1800s.\n");
 
 while (true) {
   YIELD();
 
-  // ONLY measure after the 60s warmup
+  // ONLY measure after the 120s warmup
   if (time &gt;= WARMUP_PERIOD) {
     
     // 1. Detect Control Messages (Using your specific log strings)

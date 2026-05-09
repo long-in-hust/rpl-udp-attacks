@@ -6,7 +6,7 @@ var client_responses_received = 0;
 var warmup_done_msg_logged = false;
 
 // Time Constants (in microseconds)
-var WARMUP_PERIOD = 60 * 1000000;    // Ignore the first 60 seconds
+var WARMUP_PERIOD = 120 * 1000000;    // Ignore the first 60 seconds
 var REPORT_INTERVAL = 60 * 1000000;  // Report every 60 seconds after warmup
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 
