@@ -1,11 +1,14 @@
 // Cooja script: count MRHOF parent rejections, TP/FP for address fd00::208:8:8:8
 var TARGET_ADDR = "fd00::208:8:8:8";
-var RUN_TIME_MS = 5 * 60 * 1000; // default: 5 minutes
+var END_TIME = 5 * 60 * 1000000; // 5 minutes in microseconds (Cooja time)
 
 var totalRejections = 0;
 var tp = 0;
 var fp = 0;
-var awaitingAddr = {}; // keyed by mote ID
+var lastMoteId = -1;
+var lastMarkerTime = 0;
+
+TIMEOUT(1800000); // 30-minute timeout
 
 function normalizeAddr(s) {
   if(!s) return "";
@@ -14,103 +17,82 @@ function normalizeAddr(s) {
 
 function extractIPv6(s) {
   if(!s) return null;
-  // lightweight IPv6-ish capture: contiguous hex + ':' groups
-  var m = s.match(/([0-9a-fA-F:]{2,})/);
+  var text = normalizeAddr(s);
+
+  // Prefer a token that contains ':' and only IPv6 characters.
+  var token = text.split(/[^0-9a-fA-F:]+/)[0];
+  if(token && token.indexOf(":") !== -1 && /^[0-9a-f:]+$/i.test(token)) {
+    return token;
+  }
+
+  // Fallback: find a compact IPv6-looking fragment with at least one colon.
+  var m = text.match(/([0-9a-fA-F:]*:[0-9a-fA-F:]+)/);
   if(m) return normalizeAddr(m[1]);
   return null;
 }
 
-function handleAddressCount(addr) {
-  totalRejections++;
-  if(addr && addr.indexOf(TARGET_ADDR) !== -1) {
-    tp++;
-  } else {
-    fp++;
+function extractAddressAfterMarker(text, marker) {
+  if(!text || text.indexOf(marker) === -1) return null;
+  var tail = text.substring(text.indexOf(marker) + marker.length);
+  return extractIPv6(tail);
+}
+
+log.log("MRHOF rejection detection script started. Target: " + TARGET_ADDR + "\n");
+
+while (true) {
+  YIELD();
+
+  // The marker message from rpl-mrhof.c:
+  // "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:"
+  var marker = "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:";
+
+  if (msg.contains(marker)) {
+    // Try to extract the address that follows the marker in the same log message.
+    var maybeAddr = extractAddressAfterMarker(msg, marker);
+    if (maybeAddr) {
+      totalRejections++;
+      if (maybeAddr.indexOf(TARGET_ADDR) !== -1) {
+        tp++;
+        log.log("[MRHOF] TP: " + maybeAddr + "\n");
+      } else {
+        fp++;
+        log.log("[MRHOF] FP: " + maybeAddr + "\n");
+      }
+    } else {
+      // Mark that we should expect the address on the next message from this mote.
+      lastMoteId = msg.getMoteID();
+      lastMarkerTime = time;
+    }
+  } else if (lastMoteId >= 0 && msg.getMoteID() === lastMoteId && (time - lastMarkerTime) < 100000) {
+    // This might be the address line following the marker.
+    var addr = extractIPv6(msg);
+    if (addr) {
+      totalRejections++;
+      if (addr.indexOf(TARGET_ADDR) !== -1) {
+        tp++;
+        log.log("[MRHOF] TP: " + addr + "\n");
+      } else {
+        fp++;
+        log.log("[MRHOF] FP: " + addr + "\n");
+      }
+      lastMoteId = -1;
+    }
   }
-}
 
-function makeLogListener(mote) {
-  try {
-    var logIf = mote.getInterfaces().getLog();
-    logIf.addLogListener(function(sourceMote, text) {
-      // text is a single log message fragment from a mote
-      if(!text) return;
+  // Check if we've reached the end time
+  if (time >= END_TIME) {
+    var total = totalRejections;
+    var tpRate = total > 0 ? (tp / total) : 0;
+    var fpRate = total > 0 ? (fp / total) : 0;
 
-      // The decisive message from rpl-mrhof.c:
-      // "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:"
-      var marker = "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:";
-      var mid = mote.getID();
-
-      if(text.indexOf(marker) !== -1) {
-        // Same log line might already include the address; try to extract
-        var maybeAddr = extractIPv6(text);
-        if(maybeAddr) {
-          handleAddressCount(maybeAddr);
-          awaitingAddr[mid] = false;
-        } else {
-          // Expect the next log entry from same mote to contain the printed IPv6
-          awaitingAddr[mid] = true;
-        }
-        return;
-      }
-
-      // If we were awaiting an address for this mote, treat this text as the printed address line
-      if(awaitingAddr[mid]) {
-        var addr = extractIPv6(text);
-        handleAddressCount(addr);
-        awaitingAddr[mid] = false;
-        return;
-      }
-
-      // Defensive: sometimes the address might appear on same line without marker
-      // (rare) -> check for marker-less direct address printing
-      if(text.indexOf(TARGET_ADDR) !== -1) {
-        // If we see the target address but didn't previously mark a rejection, don't increment totalRejections here.
-        // This branch is only informational; you can decide to count it by moving logic here.
-      }
-    });
-  } catch(e) {
-    print("Failed to attach log listener to mote " + mote.getID() + ": " + e);
+    log.log("=== MRHOF rejection summary ===\n");
+    log.log("Total rejections: " + total + "\n");
+    log.log("True positives (addr contains " + TARGET_ADDR + "): " + tp + "\n");
+    log.log("False positives: " + fp + "\n");
+    log.log("TP / total = " + tp + " / " + total + " = " + tpRate.toFixed(4) + "\n");
+    log.log("FP / total = " + fp + " / " + total + " = " + fpRate.toFixed(4) + "\n");
+    log.log("=== end summary ===\n");
+    log.testOK();
+    break;
   }
-}
-
-// Attach listeners to all current motes and to future added motes.
-for(var i = 0; i < sim.getMotes().length; i++) {
-  makeLogListener(sim.getMotes()[i]);
-}
-
-// Listen for motes added later
-sim.getMotes().addSimEventListener({
-  moteAdded: function(mote) { makeLogListener(mote); },
-  moteRemoved: function(mote) { /* ignore */ }
-});
-
-// Summary printer
-function printSummary() {
-  var total = totalRejections;
-  var tpRate = total > 0 ? (tp / total) : 0;
-  var fpRate = total > 0 ? (fp / total) : 0;
-  print("=== MRHOF rejection summary ===");
-  print("Total rejections: " + total);
-  print("True positives (addr contains " + TARGET_ADDR + "): " + tp);
-  print("False positives: " + fp);
-  print("TP / total = " + tp + " / " + total + " = " + tpRate.toFixed(4));
-  print("FP / total = " + fp + " / " + total + " = " + fpRate.toFixed(4));
-  print("=== end summary ===");
-}
-
-// Auto-print after RUN_TIME_MS and stop simulation (optional)
-setTimeout(function() {
-  printSummary();
-  // Optional: stop simulation automatically
-  // sim.stopSimulation();
-}, RUN_TIME_MS);
-
-// Also expose functions for manual control from the script console:
-// - call printSummary() to print current counts
-// - call resetCounts() to zero counters
-function resetCounts() {
-  totalRejections = 0; tp = 0; fp = 0;
-  awaitingAddr = {};
-  print("Counters reset.");
 }

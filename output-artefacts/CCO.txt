@@ -36,6 +36,11 @@ Control Messages (Sent):
   Overhead Ratio: 6.42 control/data
 
 ============= Decreased Rank Attack Prevented ===============
+Control Messages (Sent):
+  DIO: 264 | DIS: 29 | DAO: 12
+  Total Overhead: 305 packets
+  Data Sent: 3055 packets
+  Overhead Ratio: 0.10 control/data
 
 ============= Blackhole No Attack ===============
 Control Messages (Sent):

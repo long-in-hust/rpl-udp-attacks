@@ -2,7 +2,6 @@
 <simconf version="2023090101">
   <simulation>
     <title>rpl-decreased-rank-prevented</title>
-    <speedlimit>20.0</speedlimit>
     <randomseed>321459</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
@@ -250,18 +249,18 @@
       <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>2.6118631902188545 0.0 0.0 2.6118631902188545 616.8185076493809 -20.14698853057784</viewport>
+      <viewport>3.1342358282626255 0.0 0.0 3.1342358282626255 420.68220917925703 34.223613763306524</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" />
+    <bounds x="0" y="-2" height="800" width="873" z="5" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:8</filter>
+      <filter>invalid</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="1" y="160" height="240" width="1720" z="2" />
+    <bounds x="-8" y="123" height="227" width="1720" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -284,7 +283,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="3" />
+    <bounds x="1" y="796" height="166" width="1720" z="7" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -292,7 +291,7 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="4" />
+    <bounds x="872" y="0" height="160" width="848" z="8" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
@@ -301,7 +300,7 @@
       <formatted_time />
       <analyzers name="6lowpan-pcap" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" z="1" />
+    <bounds x="875" y="398" height="402" width="844" z="6" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -376,7 +375,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="978" y="4" height="700" width="600" z="4" />
+    <bounds x="736" y="136" height="700" width="600" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -436,7 +435,7 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="1076" y="197" height="700" width="600" z="3" />
+    <bounds x="208" y="59" height="700" width="600" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -500,6 +499,111 @@ while (true) {
 }</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="781" y="254" height="700" width="600" z="5" />
+    <bounds x="1203" y="100" height="700" width="600" z="2" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>// Cooja script: count MRHOF parent rejections, TP/FP for address fd00::208:8:8:8
+var TARGET_ADDR = "fd00::208:8:8:8";
+var END_TIME = 29 * 60 * 1000000 + 59 * 1000000; // 5 minutes in microseconds (Cooja time)
+
+var totalRejections = 0;
+var tp = 0;
+var fp = 0;
+var lastMoteId = -1;
+var lastMarkerTime = 0;
+
+TIMEOUT(1800000); // 30-minute timeout
+
+function normalizeAddr(s) {
+  if(!s) return "";
+  return s.replace(/\s+/g, "").toLowerCase();
+}
+
+function extractIPv6(s) {
+  if(!s) return null;
+  var text = normalizeAddr(s);
+
+  // Prefer a token that contains ':' and only IPv6 characters.
+  var token = text.split(/[^0-9a-fA-F:]+/)[0];
+  if(token &amp;&amp; token.indexOf(":") !== -1 &amp;&amp; /^[0-9a-f:]+$/i.test(token)) {
+    return token;
+  }
+
+  // Fallback: find a compact IPv6-looking fragment with at least one colon.
+  var m = text.match(/([0-9a-fA-F:]*:[0-9a-fA-F:]+)/);
+  if(m) return normalizeAddr(m[1]);
+  return null;
+}
+
+function extractAddressAfterMarker(text, marker) {
+  if(!text || text.indexOf(marker) === -1) return null;
+  var tail = text.substring(text.indexOf(marker) + marker.length);
+  return extractIPv6(tail);
+}
+
+log.log("MRHOF rejection detection script started. Target: " + TARGET_ADDR + "\n");
+
+while (true) {
+  YIELD();
+
+  // The marker message from rpl-mrhof.c:
+  // "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:"
+  var marker = "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:";
+
+  if (msg.contains(marker)) {
+    // Try to extract the address that follows the marker in the same log message.
+    var maybeAddr = extractAddressAfterMarker(msg, marker);
+    if (maybeAddr) {
+      totalRejections++;
+      if (maybeAddr.indexOf(TARGET_ADDR) !== -1) {
+        tp++;
+        log.log("[MRHOF] TP: " + maybeAddr + "\n");
+      } else {
+        fp++;
+        log.log("[MRHOF] FP: " + maybeAddr + "\n");
+      }
+    } else {
+      // Mark that we should expect the address on the next message from this mote.
+      lastMoteId = msg.getMoteID();
+      lastMarkerTime = time;
+    }
+  } else if (lastMoteId &gt;= 0 &amp;&amp; msg.getMoteID() === lastMoteId &amp;&amp; (time - lastMarkerTime) &lt; 100000) {
+    // This might be the address line following the marker.
+    var addr = extractIPv6(msg);
+    if (addr) {
+      totalRejections++;
+      if (addr.indexOf(TARGET_ADDR) !== -1) {
+        tp++;
+        log.log("[MRHOF] TP: " + addr + "\n");
+      } else {
+        fp++;
+        log.log("[MRHOF] FP: " + addr + "\n");
+      }
+      lastMoteId = -1;
+    }
+  }
+
+  // Check if we've reached the end time
+  if (time &gt;= END_TIME) {
+    var total = totalRejections;
+    var tpRate = total &gt; 0 ? (tp / total) : 0;
+    var fpRate = total &gt; 0 ? (fp / total) : 0;
+
+    log.log("=== MRHOF rejection summary ===\n");
+    log.log("Total rejections: " + total + "\n");
+    log.log("True positives (addr contains " + TARGET_ADDR + "): " + tp + "\n");
+    log.log("False positives: " + fp + "\n");
+    log.log("TP / total = " + tp + " / " + total + " = " + tpRate.toFixed(4) + "\n");
+    log.log("FP / total = " + fp + " / " + total + " = " + fpRate.toFixed(4) + "\n");
+    log.log("=== end summary ===\n");
+    log.testOK();
+    break;
+  }
+}</script>
+      <active>true</active>
+    </plugin_config>
+    <bounds x="1051" y="200" height="700" width="600" />
   </plugin>
 </simconf>

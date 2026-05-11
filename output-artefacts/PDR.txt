@@ -42,6 +42,12 @@ Downstream (Server -> Client):
   PDR: 99.66%
 
 ============= Decreased Rank Attack Prevented ===============
+Upstream (Client -> Server):
+  Sent: 3055 | Received: 3049
+  PDR: 99.80%
+Downstream (Server -> Client):
+  Sent: 3049 | Received: 3044
+  PDR: 99.84%
 
 ============= Blackhole No Attack ===============
 Upstream (Client -> Server):
