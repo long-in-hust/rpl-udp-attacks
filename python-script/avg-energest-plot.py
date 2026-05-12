@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 # Configuration
 file_path = '../output-artefacts/energest-csv/energy_results_dis_prevented.csv'
 minute_ticks = 60000000
-selected_motes = [10, 11]
+selected_motes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 try:
     # Read the CSV
