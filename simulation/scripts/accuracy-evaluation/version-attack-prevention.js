@@ -1,9 +1,9 @@
 // version-drop-measurement.js
 // Count DIOs dropped due to invalid DAG version and classify TP/FP.
-// TP = source == fd00::208:8:8:8
+// TP = source == fe80::208:8:8:8
 
-var DROP_MSG = "Dropping DIO due to invalid DAG version from";
-var TARGET_ADDR = "fd00::208:8:8:8";
+var DROP_MSG = "Blacklisting the source IP address of the malformed DIO: ";
+var TARGET_ADDR = "fe80::208:8:8:8";
 
 var DROPPED = 0;
 var TP = 0;
@@ -11,12 +11,39 @@ var FP = 0;
 
 var WARMUP_PERIOD = 120 * 1000000;    // ignore first 60s
 var REPORT_INTERVAL = 60 * 1000000;  // report every 60s after warmup
-var STOP_TIME = 30 * 60 * 1000000;   // stop after 11 minutes
+var STOP_TIME = 29 * 60 * 1000000 + 59.5 * 1000000; 
 var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
 
 TIMEOUT(1800000); // 30-minute timeout
 
 log.log("Version-drop measurement script started. Warmup: 60s. Target: " + TARGET_ADDR + "\n");
+
+function normalizeAddr(s) {
+  if(!s) return "";
+  return s.replace(/\s+/g, "").toLowerCase();
+}
+
+function extractIPv6(s) {
+  if(!s) return null;
+  var text = normalizeAddr(s);
+
+  // Prefer a token that contains ':' and only IPv6 characters.
+  var token = text.split(/[^0-9a-fA-F:]+/)[0];
+  if(token && token.indexOf(":") !== -1 && /^[0-9a-f:]+$/i.test(token)) {
+    return token;
+  }
+
+  // Fallback: find a compact IPv6-looking fragment with at least one colon.
+  var m = text.match(/([0-9a-fA-F:]*:[0-9a-fA-F:]+)/);
+  if(m) return normalizeAddr(m[1]);
+  return null;
+}
+
+function extractAddressAfterMarker(text, marker) {
+  if(!text || text.indexOf(marker) === -1) return null;
+  var tail = text.substring(text.indexOf(marker) + marker.length);
+  return extractIPv6(tail);
+}
 
 while (true) {
   YIELD();
@@ -27,18 +54,7 @@ while (true) {
 
   if (msg.contains(DROP_MSG)) {
     // Try to extract IPv6 address from the same log line
-    var m = msg.match(/Dropping DIO due to invalid DAG version from\s*([0-9a-f:]+)/i);
-    var addr = null;
-    if (m && m[1]) {
-      addr = m[1].toLowerCase();
-    } else {
-      // fallback: try to find any IPv6-like token in the message
-      var m2 = msg.match(/([0-9a-f:]{3,})/i);
-      if (m2 && m2[1]) {
-        addr = m2[1].toLowerCase();
-      }
-    }
-
+    addr = extractAddressAfterMarker(msg, DROP_MSG);
     DROPPED++;
     if (addr === TARGET_ADDR) {
       TP++;

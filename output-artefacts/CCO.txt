@@ -27,6 +27,11 @@ Control Messages (Sent):
   Overhead Ratio: 0.27 control/data
 
 ============= DAG Version Attack Prevented ===============
+Control Messages (Sent):
+  DIO: 220 | DIS: 27 | DAO: 3
+  Total Overhead: 250 packets
+  Data Sent: 3037 packets
+  Overhead Ratio: 0.08 control/data
 
 ============= Decreased Rank Attack ===============
 Control Messages (Sent):
@@ -57,4 +62,9 @@ Control Messages (Sent):
   Overhead Ratio: 0.55 control/data
 
 ============= Blackhole Attack Prevented ===============
+Control Messages (Sent):
+  DIO: 151 | DIS: 25 | DAO: 10
+  Total Overhead: 186 packets
+  Data Sent: 1486 packets
+  Overhead Ratio: 0.13 control/data
 

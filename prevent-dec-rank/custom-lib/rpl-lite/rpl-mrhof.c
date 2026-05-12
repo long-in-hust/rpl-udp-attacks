@@ -263,10 +263,24 @@ best_parent(rpl_nbr_t *nbr1, rpl_nbr_t *nbr2)
   if(nbr1 == curr_instance.dag.preferred_parent && within_hysteresis(nbr2))
   {
     LOG_INFO("Neighbor 2 is in hysteresis, keeping Neighbor 1\n");
+    LOG_INFO("Neighbor 2's address:");
+    if (nbr2 != NULL) {
+      LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr2));
+      LOG_INFO_("\n");
+    } else {
+      LOG_INFO_("N/A\n");
+    }
     return nbr1;
   }
   if(nbr2 == curr_instance.dag.preferred_parent && within_hysteresis(nbr1)) {
     LOG_INFO("Neighbor 1 is in hysteresis, keeping Neighbor 2\n");
+    LOG_INFO("Neighbor 1's address:");
+    if (nbr1 != NULL) {
+      LOG_INFO_6ADDR(rpl_neighbor_get_ipaddr(nbr1));
+      LOG_INFO_("\n");
+    } else {
+      LOG_INFO_("N/A\n");
+    }
     return nbr2;
   }
 

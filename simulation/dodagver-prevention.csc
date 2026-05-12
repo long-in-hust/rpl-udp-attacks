@@ -13,7 +13,7 @@
       <success_ratio_rx>1.0</success_ratio_rx>
     </radiomedium>
     <events>
-      <logoutput>50000</logoutput>
+      <logoutput>20000</logoutput>
     </events>
     <motetype>
       org.contikios.cooja.contikimote.ContikiMoteType
@@ -252,16 +252,16 @@
       <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
       <viewport>2.6118631902188545 0.0 0.0 2.6118631902188545 616.8185076493809 -20.14698853057784</viewport>
     </plugin_config>
-    <bounds x="1" y="1" height="800" width="873" />
+    <bounds x="1" y="1" height="800" width="873" z="7" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
-      <filter>ID:8</filter>
+      <filter>version</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="1" y="160" height="240" width="1720" z="2" />
+    <bounds x="1" y="160" height="240" width="1720" z="5" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -284,7 +284,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="0" y="795" height="166" width="1720" z="3" />
+    <bounds x="0" y="795" height="166" width="1720" z="8" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -292,14 +292,13 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="4" />
+    <bounds x="872" y="0" height="160" width="848" z="6" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
     <plugin_config>
       <split>150</split>
       <formatted_time />
-      <analyzers name="6lowpan-pcap" />
     </plugin_config>
     <bounds x="875" y="398" height="402" width="844" z="1" />
   </plugin>
@@ -374,9 +373,8 @@ while (true) {
     }
   }
 }</script>
-      <active>true</active>
     </plugin_config>
-    <bounds x="978" y="4" height="700" width="600" z="4" />
+    <bounds x="978" y="4" height="700" width="600" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -434,9 +432,8 @@ while (true) {
       }
     }
 }</script>
-      <active>true</active>
     </plugin_config>
-    <bounds x="1076" y="197" height="700" width="600" z="3" />
+    <bounds x="1076" y="197" height="700" width="600" z="2" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -498,8 +495,99 @@ while (true) {
     }
   }
 }</script>
+    </plugin_config>
+    <bounds x="781" y="254" height="700" width="600" z="4" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.ScriptRunner
+    <plugin_config>
+      <script>// version-drop-measurement.js
+// Count DIOs dropped due to invalid DAG version and classify TP/FP.
+// TP = source == fd00::208:8:8:8
+
+var DROP_MSG = "Blacklisting the source IP address of the malformed DIO: ";
+var TARGET_ADDR = "fe80::208:8:8:8";
+
+var DROPPED = 0;
+var TP = 0;
+var FP = 0;
+
+var WARMUP_PERIOD = 120 * 1000000;    // ignore first 60s
+var REPORT_INTERVAL = 60 * 1000000;  // report every 60s after warmup
+var STOP_TIME = 29 * 60 * 1000000 + 59.5 * 1000000;   // stop after 11 minutes
+var next_report = WARMUP_PERIOD + REPORT_INTERVAL;
+
+TIMEOUT(1800000); // 30-minute timeout
+
+log.log("Version-drop measurement script started. Warmup: 60s. Target: " + TARGET_ADDR + "\n");
+
+while (true) {
+  YIELD();
+
+  if (time &lt; WARMUP_PERIOD) {
+    continue;
+  }
+
+  if (msg.contains(DROP_MSG)) {
+    // Try to extract IPv6 address from the same log line
+    var m = msg.match(/Dropping DIO due to invalid DAG version from\s*([0-9a-f:]+)/i);
+    var addr = null;
+    if (m &amp;&amp; m[1]) {
+      addr = m[1].toLowerCase();
+    } else {
+      // fallback: try to find any IPv6-like token in the message
+      var m2 = msg.match(/([0-9a-f:]{3,})/i);
+      if (m2 &amp;&amp; m2[1]) {
+        addr = m2[1].toLowerCase();
+      }
+    }
+
+    DROPPED++;
+    if (addr === TARGET_ADDR) {
+      TP++;
+      log.log("[VERSION-DROP] True Positive: " + addr + " (total dropped: " + DROPPED + ")\n");
+    } else if (addr) {
+      FP++;
+      log.log("[VERSION-DROP] False Positive: " + addr + " (total dropped: " + DROPPED + ")\n");
+    } else {
+      // Unknown addr -&gt; count as FP (conservative)
+      FP++;
+      log.log("[VERSION-DROP] Unknown addr (counted as FP). Total dropped: " + DROPPED + "\n");
+    }
+  }
+
+  // Periodic reporting
+  if (time &gt;= next_report) {
+    var tp_rate = (DROPPED &gt; 0) ? (TP / DROPPED) : 0;
+    var fp_rate = (DROPPED &gt; 0) ? (FP / DROPPED) : 0;
+
+    log.log("--- Version-Drop Report at " + (time / 1000000).toFixed(0) + "s ---\n");
+    log.log("  DIOs dropped (version mismatch): " + DROPPED + "\n");
+    log.log("  True Positives: " + TP + "\n");
+    log.log("  False Positives: " + FP + "\n");
+    log.log("  TP/Total: " + tp_rate.toFixed(3) + " | FP/Total: " + fp_rate.toFixed(3) + "\n");
+    log.log("-------------------------------------------\n");
+
+    next_report += REPORT_INTERVAL;
+  }
+
+  // Final stop and report
+  if (time &gt;= STOP_TIME) {
+    var tp_rate = (DROPPED &gt; 0) ? (TP / DROPPED) : 0;
+    var fp_rate = (DROPPED &gt; 0) ? (FP / DROPPED) : 0;
+
+    log.log("=== FINAL VERSION-DROP METRICS ===\n");
+    log.log("DIOs dropped (version mismatch): " + DROPPED + "\n");
+    log.log("True Positives: " + TP + "\n");
+    log.log("False Positives: " + FP + "\n");
+    log.log("TP/Total: " + tp_rate.toFixed(3) + "\n");
+    log.log("FP/Total: " + fp_rate.toFixed(3) + "\n");
+    log.testOK();
+    break;
+  }
+}</script>
       <active>true</active>
     </plugin_config>
-    <bounds x="781" y="254" height="700" width="600" z="5" />
+    <bounds x="889" y="44" height="700" width="600" />
   </plugin>
 </simconf>

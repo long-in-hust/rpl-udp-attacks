@@ -2,6 +2,7 @@
 <simconf version="2023090101">
   <simulation>
     <title>rpl-decreased-rank-prevented</title>
+    <speedlimit>20.0</speedlimit>
     <randomseed>321459</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
@@ -118,7 +119,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="18.603182172546166" y="119.81250420148186" />
+          <pos x="22.618661921210503" y="104.55368115655737" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -138,7 +139,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-76.74989226884009" y="153.52109865386853" />
+          <pos x="-83.44235851661398" y="145.2224405066289" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -148,7 +149,7 @@
       <mote>
         <interface_config>
           org.contikios.cooja.interfaces.Position
-          <pos x="-17.74977780742052" y="161.49465296605283" />
+          <pos x="-8.648023710448024" y="157.21147456747752" />
         </interface_config>
         <interface_config>
           org.contikios.cooja.contikimote.interfaces.ContikiMoteID
@@ -242,25 +243,13 @@
     </motetype>
   </simulation>
   <plugin>
-    org.contikios.cooja.plugins.Visualizer
-    <plugin_config>
-      <moterelations>true</moterelations>
-      <skin>org.contikios.cooja.plugins.skins.IDVisualizerSkin</skin>
-      <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
-      <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
-      <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
-      <viewport>3.1342358282626255 0.0 0.0 3.1342358282626255 420.68220917925703 34.223613763306524</viewport>
-    </plugin_config>
-    <bounds x="0" y="-2" height="800" width="873" z="5" />
-  </plugin>
-  <plugin>
     org.contikios.cooja.plugins.LogListener
     <plugin_config>
       <filter>invalid</filter>
       <formatted_time />
       <coloring />
     </plugin_config>
-    <bounds x="-8" y="123" height="227" width="1720" z="1" />
+    <bounds x="-3" y="123" height="227" width="1720" z="4" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.TimeLine
@@ -283,7 +272,7 @@
       <showLEDs />
       <zoomfactor>500.0</zoomfactor>
     </plugin_config>
-    <bounds x="1" y="796" height="166" width="1720" z="7" />
+    <bounds x="8" y="736" height="166" width="1720" z="6" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.Notes
@@ -291,7 +280,7 @@
       <notes>Enter notes here</notes>
       <decorations>true</decorations>
     </plugin_config>
-    <bounds x="872" y="0" height="160" width="848" z="8" />
+    <bounds x="872" y="0" height="160" width="848" z="7" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.RadioLogger
@@ -300,7 +289,7 @@
       <formatted_time />
       <analyzers name="6lowpan-pcap" />
     </plugin_config>
-    <bounds x="875" y="398" height="402" width="844" z="6" />
+    <bounds x="875" y="398" height="402" width="844" z="8" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -373,9 +362,8 @@ while (true) {
     }
   }
 }</script>
-      <active>true</active>
     </plugin_config>
-    <bounds x="736" y="136" height="700" width="600" z="3" />
+    <bounds x="234" y="124" height="700" width="600" z="2" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -433,9 +421,8 @@ while (true) {
       }
     }
 }</script>
-      <active>true</active>
     </plugin_config>
-    <bounds x="208" y="59" height="700" width="600" z="4" />
+    <bounds x="285" y="333" height="700" width="600" z="3" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
@@ -497,15 +484,14 @@ while (true) {
     }
   }
 }</script>
-      <active>true</active>
     </plugin_config>
-    <bounds x="1203" y="100" height="700" width="600" z="2" />
+    <bounds x="1203" y="100" height="700" width="600" z="1" />
   </plugin>
   <plugin>
     org.contikios.cooja.plugins.ScriptRunner
     <plugin_config>
       <script>// Cooja script: count MRHOF parent rejections, TP/FP for address fd00::208:8:8:8
-var TARGET_ADDR = "fd00::208:8:8:8";
+var TARGET_ADDR = "fe80::208:8:8:8";
 var END_TIME = 29 * 60 * 1000000 + 59 * 1000000; // 5 minutes in microseconds (Cooja time)
 
 var totalRejections = 0;
@@ -548,6 +534,12 @@ log.log("MRHOF rejection detection script started. Target: " + TARGET_ADDR + "\n
 while (true) {
   YIELD();
 
+  // Only process logs from motes 10 and 11
+  var mid = id;
+  if (mid !== 10 &amp;&amp; mid !== 11) {
+    continue;
+  }
+
   // The marker message from rpl-mrhof.c:
   // "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:"
   var marker = "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:";
@@ -566,10 +558,10 @@ while (true) {
       }
     } else {
       // Mark that we should expect the address on the next message from this mote.
-      lastMoteId = msg.getMoteID();
+      lastMoteId = mid;
       lastMarkerTime = time;
     }
-  } else if (lastMoteId &gt;= 0 &amp;&amp; msg.getMoteID() === lastMoteId &amp;&amp; (time - lastMarkerTime) &lt; 100000) {
+  } else if (lastMoteId &gt;= 0 &amp;&amp; mid === lastMoteId &amp;&amp; (time - lastMarkerTime) &lt; 100000) {
     // This might be the address line following the marker.
     var addr = extractIPv6(msg);
     if (addr) {
@@ -605,5 +597,17 @@ while (true) {
       <active>true</active>
     </plugin_config>
     <bounds x="1051" y="200" height="700" width="600" />
+  </plugin>
+  <plugin>
+    org.contikios.cooja.plugins.Visualizer
+    <plugin_config>
+      <moterelations>true</moterelations>
+      <skin>org.contikios.cooja.plugins.skins.IDVisualizerSkin</skin>
+      <skin>org.contikios.cooja.plugins.skins.GridVisualizerSkin</skin>
+      <skin>org.contikios.cooja.plugins.skins.TrafficVisualizerSkin</skin>
+      <skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin>
+      <viewport>3.1129530672288555 0.0 0.0 3.1129530672288555 465.568464023571 -17.613625089474198</viewport>
+    </plugin_config>
+    <bounds x="1" y="1" height="681" width="745" z="5" />
   </plugin>
 </simconf>

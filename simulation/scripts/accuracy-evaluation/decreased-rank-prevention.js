@@ -1,6 +1,6 @@
 // Cooja script: count MRHOF parent rejections, TP/FP for address fd00::208:8:8:8
-var TARGET_ADDR = "fd00::208:8:8:8";
-var END_TIME = 5 * 60 * 1000000; // 5 minutes in microseconds (Cooja time)
+var TARGET_ADDR = "fe80::208:8:8:8";
+var END_TIME = 29 * 60 * 1000000 + 59 * 1000000; // 5 minutes in microseconds (Cooja time)
 
 var totalRejections = 0;
 var tp = 0;
@@ -42,6 +42,12 @@ log.log("MRHOF rejection detection script started. Target: " + TARGET_ADDR + "\n
 while (true) {
   YIELD();
 
+  // Only process logs from motes 10 and 11
+  var mid = id;
+  if (mid !== 10 && mid !== 11) {
+    continue;
+  }
+
   // The marker message from rpl-mrhof.c:
   // "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:"
   var marker = "Prefer current parent over a neighbor with invalid hop count. Invalid neighbor's address:";
@@ -60,10 +66,10 @@ while (true) {
       }
     } else {
       // Mark that we should expect the address on the next message from this mote.
-      lastMoteId = msg.getMoteID();
+      lastMoteId = mid;
       lastMarkerTime = time;
     }
-  } else if (lastMoteId >= 0 && msg.getMoteID() === lastMoteId && (time - lastMarkerTime) < 100000) {
+  } else if (lastMoteId >= 0 && mid === lastMoteId && (time - lastMarkerTime) < 100000) {
     // This might be the address line following the marker.
     var addr = extractIPv6(msg);
     if (addr) {

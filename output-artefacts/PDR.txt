@@ -31,7 +31,12 @@ Downstream (Server -> Client):
   PDR: 99.73%
 
 ============= DAG Version Attack Prevented ===============
-
+Upstream (Client -> Server):
+  Sent: 3037 | Received: 2872
+  PDR: 94.57%
+Downstream (Server -> Client):
+  Sent: 2872 | Received: 2862
+  PDR: 99.65%
 
 ============= Decreased Rank Attack ===============
 Upstream (Client -> Server):
