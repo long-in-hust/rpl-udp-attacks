@@ -6,7 +6,7 @@ import pandas as pd
 
 
 BASE_DIR = Path(__file__).resolve().parent
-INPUT_DIR = BASE_DIR.parent / "output-artefacts" / "energest-csv"
+INPUT_DIR = BASE_DIR.parent / "output-artefacts" / "energest-csv-blackhole"
 FIGURES_DIR = BASE_DIR.parent / "output-artefacts" / "figures"
 MINUTE_TICKS = 60_000_000
 METRICS = ["CPU", "Radio Total"]
@@ -90,7 +90,7 @@ def plot_scenario(metric: str, scenario_label: str, series_map: dict[str, pd.Ser
 def main() -> None:
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
-    normal_file = INPUT_DIR / "energy_results_normal.csv"
+    normal_file = INPUT_DIR / "energy_results_blackhole_noattack.csv"
     if not normal_file.exists():
         raise FileNotFoundError(f"{normal_file} not found")
 
