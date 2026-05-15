@@ -23,7 +23,6 @@ ip_input(void)
         UIP_ICMP_BUF->icode != RPL_CODE_DIS) {
         return NETSTACK_IP_PROCESS;
     }
-    dis_packets++;
     float dis_ratio = (float)(dis_packets + 1) / (float)(total_packets + 2);
     if (dis_ratio > RPL_DIS_PREVENTION_THRESHOLD) {
         LOG_INFO("Dropping DIS packet. From: ");
@@ -31,6 +30,7 @@ ip_input(void)
         LOG_INFO_(" DIS ratio: %u%%\n", (unsigned int)(dis_ratio * 100));
         return NETSTACK_IP_DROP;
     }
+    dis_packets++;
     LOG_INFO("Accepting DIS packet. From: ");
     LOG_INFO_6ADDR(&UIP_IP_BUF->srcipaddr);
     LOG_INFO_(" DIS ratio: %u%%\n", (unsigned int)(dis_ratio * 100));
